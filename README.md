@@ -1,3 +1,5 @@
+After downloading the files:
+
 For running the project do the following:
 
 1. install django by writing in the cmd:
