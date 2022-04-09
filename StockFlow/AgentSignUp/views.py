@@ -16,4 +16,4 @@ def AgentSignUp(response):
     return render(response, "AgentSignUp/signup_page.html", {"form":form})
 
 def home(response):
-    return HttpResponse("<h1>Test</h1>")
+    return render(response, "AgentSignUp/home.html", {})

@@ -15,4 +15,4 @@ class Agent(models.Model):
     isAgent = BooleanField(initial=False)
 
     def __str__(self):
-        return (self.emp_ID, self.full_name)
+        return self.full_name
