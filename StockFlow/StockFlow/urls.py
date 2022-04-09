@@ -20,8 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("AgentSignUp.urls")),
 ]
-<<<<<<< HEAD
 
 ###########
-=======
->>>>>>> 364645aeff11e1ebf270b25bfadae5a6a26e3b73
