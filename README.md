@@ -1,6 +1,4 @@
-<<<<<<< HEAD
 
-=======
 After downloading the files:
 
 For running the project do the following:
@@ -20,4 +18,3 @@ For running the project do the following:
  
 5. accessing to the only working page (for now) go to:
    127.0.0.1:8000/AgentSignUp
->>>>>>> 84aa59fc66543371b6e7fe8a4d61754c2e21c933
