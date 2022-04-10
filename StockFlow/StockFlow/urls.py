@@ -19,4 +19,10 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("AgentSignUp.urls")),
+<<<<<<< HEAD
 ]
+=======
+]
+
+###########
+>>>>>>> 92a11410b95ef7b400e85a3bde8bf15e75a6319b
