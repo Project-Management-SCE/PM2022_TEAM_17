@@ -8,7 +8,7 @@ from django.forms import BooleanField, CharField, IntegerField
 
 class Agent(models.Model):
     emp_ID = models.AutoField(primary_key=True)
-    email = models.EmailField(max_length=50)
+    email = models.EmailField(max_length=50, unique=True)
     password = models.CharField(max_length=40)
     full_name = models.CharField(max_length=80)
     city = models.CharField(max_length=50)
