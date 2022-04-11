@@ -12,8 +12,8 @@ def AgentSignUp(response):
         return redirect("/home")
     else:
         form = CreateNewAgent()
-
     return render(response, "AgentSignUp/signup_page.html", {"form":form})
 
 def home(response):
     return render(response, "AgentSignUp/home.html", {})
+
