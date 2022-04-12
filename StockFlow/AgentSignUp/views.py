@@ -87,7 +87,7 @@ def AgentSignUp(response):
             return render(response, "AgentSignUp/signup_page.html", {'alert_pass': True})
             
     else:
-        return render(response, "AgentSignUp/signup_page.html", {"form":form})
+        return render(response, "AgentSignUp/signup_page.html", {})
 
 def home(response):
     return render(response, "AgentSignUp/home.html", {})
