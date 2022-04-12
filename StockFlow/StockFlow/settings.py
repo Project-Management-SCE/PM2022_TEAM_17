@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'AgentSignUp.apps.AgentsignupConfig',
     'crispy_forms',
     'django_jenkins',
+    'accounts',
 ]
 
 JENKINS_TASKS = (
