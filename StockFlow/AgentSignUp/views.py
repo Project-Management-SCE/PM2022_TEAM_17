@@ -8,6 +8,7 @@ from .forms import CreateNewAgent
 from .models import Agent, Customer
 from django.contrib import messages
 # Create your views here.
+from accounts.models import User
 
 def CustomerSignIn(response):
     if response.method == "POST":
@@ -66,31 +67,34 @@ def AgentSignIn(response):
         return render(response, "AgentSignUp/signin_page.html", {})
         
 def AgentSignUp(response):
+    if(response.user.is_authenticated):
+        return redirect('/')
     if response.method == "POST":
-        agent = Agent()
-        agent.full_name = response.POST.get('full_name')
-        agent.email = response.POST.get('email')
-        agent.password = response.POST.get('password')
+        #agent = User()
+        full_name = response.POST.get('full_name')
+        email = response.POST.get('email')
+        password = response.POST.get('password')
         pass2 = response.POST.get('password2')
-        agent.city = response.POST.get('city')
-        agent.Mobile = response.POST.get('Mobile')
-        agent.isAgent = False
+        city = response.POST.get('city')
+        Mobile = response.POST.get('Mobile')
+        #isConfirmedAgent = False
         try:
-            agentEmailTest = Agent.objects.get(email = agent.email)
-        except Agent.DoesNotExist:
+            agentEmailTest = User.objects.get(email = email,is_Agent=True)
+        except User.DoesNotExist:
             agentEmailTest=None 
-            return render(response, "AgentSignUp/signup_page.html", {'alert_email': True})
-        if agent.password == pass2:
+        if password == pass2:
             if not agentEmailTest:
+                agent=User.objects.create_Agent(full_name=full_name,email=email,password=password,city=city,Mobile=Mobile)
                 agent.save()
                 return redirect("/home")
             else:
                 return render(response, "AgentSignUp/signup_page.html", {'alert_email': True})
-        elif agent.password != pass2:
+        elif password != pass2:
             return render(response, "AgentSignUp/signup_page.html", {'alert_pass': True})
             
     else:
-        return render(response, "AgentSignUp/signup_page.html", {})
+        form = CreateNewAgent()
+    return render(response, "AgentSignUp/signup_page.html", {"form":form})
 
 def home(response):
     return render(response, "AgentSignUp/home.html", {})
