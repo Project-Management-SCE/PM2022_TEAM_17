@@ -18,7 +18,8 @@ def CustomerSignIn(response):
             custPassCheck = Customer.objects.get(password = passwordCheck)
         except Customer.DoesNotExist: # if customer with such email or password doesn't exists or some of the data is wrong
             return render(response, "CustomerSignUp/signin_page.html", {'alert': True})
-        return render(response, "CustomerSignUp/home.html", {'success': True})
+        messages.success("Sign in successfully!")
+        return redirect("/cust_signin")
     else:
         return render(response, "CustomerSignUp/signin_page.html", {})
 
@@ -57,8 +58,10 @@ def AgentSignIn(response):
             agentEmailCheck = Agent.objects.get(email = emailCheck)
             agentPassCheck = Agent.objects.get(password = passwordCheck)
         except Agent.DoesNotExist: # if agent with such email or password doesn't exists or some of the data is wrong
-            return render(response, "AgentSignUp/signin_page.html", {'alert': True})
-        return render(response, "AgentSignUp/home.html", {'success': True})
+            messages.error(response, "one or more of the credentials are incorrect!")
+            return redirect("/agent_signin")
+        messages.success(response, "Sign in successfully!")
+        return redirect("/agent_signin") 
     else:
         return render(response, "AgentSignUp/signin_page.html", {})
         
@@ -87,7 +90,7 @@ def AgentSignUp(response):
             return render(response, "AgentSignUp/signup_page.html", {'alert_pass': True})
             
     else:
-        return render(response, "AgentSignUp/signup_page.html", {"form":form})
+        return render(response, "AgentSignUp/signup_page.html", {})
 
 def home(response):
     return render(response, "AgentSignUp/home.html", {})
