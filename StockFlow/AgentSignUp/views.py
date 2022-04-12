@@ -9,6 +9,19 @@ from .models import Agent
 from django.contrib import messages
 # Create your views here.
 
+def AgentSignIn(response):
+    if response.method == "POST":
+        emailCheck = response.POST.get('emailLogin')
+        passwordCheck = response.POST.get('passLogin')
+        try:
+            agentEmailCheck = Agent.objects.get(email = emailCheck)
+            agentPassCheck = Agent.objects.get(password = passwordCheck)
+        except Agent.DoesNotExist:
+            return render(response, "AgentSignUp/signin_page.html", {'alert': True})
+        return redirect("/home")
+    else:
+        return render(response, "AgentSignUp/signin_page.html", {})
+        
 def AgentSignUp(response):
     if response.method == "POST":
         agent = Agent()
