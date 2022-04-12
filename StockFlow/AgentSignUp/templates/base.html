@@ -59,11 +59,11 @@
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Sign up
+                Sign in
               </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" href="/agent_signin">Agent</a>
-                        <a class="dropdown-item" href="#">Customer</a>
+                        <a class="dropdown-item" href="/cust_signin">Customer</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -72,14 +72,22 @@
               </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" href="/agent_signup">Agent</a>
-                        <a class="dropdown-item" href="#">Customer</a>
+                        <a class="dropdown-item" href="/cust_signup">Customer</a>
                     </div>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="/admin">Admin<span class="sr-only">(current)</span></a>
                 </li>
             </ul>
+
         </div>
+        {% if request.user.is_authenticated %}
+        <span class="navbar-text">
+            <a href="#"> Logout </a>
+          </span> {% else %}
+        <span class="navbar-text">
+            <p> Hi {{request.user.username} </p>
+          </span> {% endif %}
     </nav>
 
 

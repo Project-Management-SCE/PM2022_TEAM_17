@@ -29,14 +29,13 @@
 </style>
 <section class="vh-100">
     <div class="container-fluid h-custom">
-
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-md-9 col-lg-6 col-xl-5 d-flex justify-content-center">
                 <img src="https://freerangestock.com/sample/120140/business-man-profile-vector.jpg" width='65%' class="img-fluid" style="border-radius: 30%;" alt="Sample image">
             </div>
 
             <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                <p class="h3 mb-5 text-center">Agent Login</p>
+                <p class="h3 mb-5 text-center">Customer Login</p>
                 <form method="POST">
                     {% csrf_token %}
                     <!-- Email input -->
@@ -50,17 +49,17 @@
                         <label class="form-label" for="form3Example4">Password</label>
                         <input type="password" name="passLogin" id="form3Example4" required=True class="form-control form-control-lg" placeholder="Enter password" />
                     </div>
-                    {% if messages %} {% for message in messages %} {% if message.tags == 'error' %}
-                    <div class="d-flex justify-content-center m-2 alert alert-danger" role="alert"> {{message}} </div>
-                    {% else %}
-                    <div class="d-flex justify-content-center m-2 alert alert-success" role="alert"> {{message}} </div>{% endif %}{% endfor %} {% endif %}
+
                     <div class="text-center text-lg-start mt-4 pt-2">
                         <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
-                        <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="/agent_signup" class="link-danger">Register</a></p>
+                        <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="/cust_signup" class="link-danger">Register</a></p>
                     </div>
 
                 </form>
-
+                {% if messages %} {% for message in messages %} {% if message.tags == 'error' %}
+                <div class="d-flex justify-content-center m-2 alert alert-danger" role="alert"> {{message}} </div>
+                {% else %}
+                <div class="d-flex justify-content-center m-2 alert alert-success" role="alert"> {{message}} </div>{% endif %}{% endfor %} {% endif %}
             </div>
         </div>
     </div>
