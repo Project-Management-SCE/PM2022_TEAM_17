@@ -18,7 +18,7 @@ def AgentSignIn(response):
             agentPassCheck = Agent.objects.get(password = passwordCheck)
         except Agent.DoesNotExist: # if agent with such email or password doesn't exists or some of the data is wrong
             return render(response, "AgentSignUp/signin_page.html", {'alert': True})
-        return render(response, "AgentSignUp/home.html", {})
+        return render(response, "AgentSignUp/home.html", {'success': True})
     else:
         return render(response, "AgentSignUp/signin_page.html", {})
         
