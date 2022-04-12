@@ -4,8 +4,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 class CreateNewAgent(UserCreationForm):
-    email = forms.EmailField()
-
-    class Meta:
-        model = User
-        fields = ["email","password1","password2"]
+    nameInput = forms.CharField()
+    cityInput = forms.CharField()
+    mobileInput = forms.CharField()
+    emailInput = forms.EmailField()
+    inputPassword = forms.PasswordInput()
