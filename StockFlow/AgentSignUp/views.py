@@ -9,7 +9,7 @@ from .models import Agent, Customer
 from django.contrib import messages
 # Create your views here.
 from accounts.models import User
-from django.contrib.auth.models import auth
+from django.contrib.auth import authenticate, login ,logout
 from django.contrib.auth.decorators import login_required
 
 
@@ -24,7 +24,7 @@ def CustomerSignIn(response):
         except User.DoesNotExist: # if customer with such email or password doesn't exists or some of the data is wrong
             return render(response, "CustomerSignUp/signin_page.html", {'alert': True})
         if cust is not None:
-            auth.login(response, cust)
+            login(response, cust)
             messages.success(response,"Sign in successfully!")
             return redirect('/')
             #return render(response, "AgentSignUp/home.html", {})
@@ -38,6 +38,7 @@ def CustomerSignUp(response):
         return redirect('/')
     if response.method == "POST":
         #cust = Customer()
+        username = response.POST.get('username')
         full_name = response.POST.get('full_name')
         email = response.POST.get('email')
         password = response.POST.get('password')
@@ -51,7 +52,7 @@ def CustomerSignUp(response):
             #return render(response, "CustomerSignUp/signup_page.html", {'alert_email': True})
         if password == pass2:
             if not custEmailTest:
-                cust=User.objects.create_Customer(full_name=full_name,email=email,password=password,city=city,Mobile=Mobile)
+                cust=User.objects.create_Customer(username=username,full_name=full_name,email=email,password=password,city=city,Mobile=Mobile)
                 cust.save()
                 return redirect("/home")
             else:
@@ -66,25 +67,43 @@ def AgentSignIn(response):
     if(response.user.is_authenticated):
         return redirect('/')
     if response.method == "POST":
-        emailCheck = response.POST.get('emailLogin')
-        passwordCheck = response.POST.get('passLogin')
+        emailCheck = response.POST.get('email')
+        passwordCheck = response.POST.get('password')
         try:
-            agent = User.objects.get(email = emailCheck,password = passwordCheck,is_Agent=True)
+            agent = User.objects.get(email = emailCheck,password = passwordCheck)
         except User.DoesNotExist: # if agent with such email or password doesn't exists or some of the data is wrong
             messages.error(response, "one or more of the credentials are incorrect!")
             return redirect("/agent_signin")
         if agent is not None:
-            auth.login(response, agent)
+            login(response, agent)
             messages.success(response, "Sign in successfully!")
-            return redirect("/agent_signin") 
+            return redirect("/home") 
     else:
         return render(response, "AgentSignUp/signin_page.html", {})
+
+    # if(request.user.is_authenticated):
+    #     return redirect('/')
+    # if request.method == 'POST':
+    #     email = request.POST['email']
+    #     password = request.POST['password']
+
+    #     user = authenticate(email=email, password=password)
+    #     if user is not None:
+    #         login(request, user)
+    #         return redirect('/home')
+    #     else:
+    #         messages.info(request, ("Invalid credentials "+email+"   "+password))
+    #         return redirect('/login')
+
+    # else:
+    #     return render(request, 'AgentSignUp/signin_page.html')
         
 def AgentSignUp(response):
     if(response.user.is_authenticated):
         return redirect('/')
     if response.method == "POST":
         #agent = User()
+        username = response.POST.get('username')
         full_name = response.POST.get('full_name')
         email = response.POST.get('email')
         password = response.POST.get('password')
@@ -98,7 +117,7 @@ def AgentSignUp(response):
             agentEmailTest=None 
         if password == pass2:
             if not agentEmailTest:
-                agent=User.objects.create_Agent(full_name=full_name,email=email,password=password,city=city,Mobile=Mobile)
+                agent=User.objects.create_Agent(username=username,full_name=full_name,email=email,password=password,city=city,Mobile=Mobile)
                 agent.save()
                 return redirect("/home")
             else:
@@ -123,15 +142,24 @@ def AdminSignIn(response):
             messages.error(response, "one or more of the credentials are incorrect!")
             return redirect("/admin_signin")
         if admin is not None:
-            auth.login(response, admin)
+            login(response, admin)
             messages.success(response, "Sign in successfully!")
             return redirect("/admin_homepage") 
     else:
         return render(response, "AdminSignIn/admin_signin.html", {})
 
+@login_required
 def AdminHomePage(request):
-    Id = request.user.email
-    admin = User.objects.get(email=Id)
-    if admin.is_Admin ==True:
-        return render(request, "AdminHomePage/admin_homepage.html", {})
-    return redirect("/home")
+    # Id = request.user.
+    # admin = User.objects.get(email=Id)
+    # if admin.is_Admin ==True:
+    user=request.user.username
+    #User.objects.get()
+    return render(request, "AdminHomePage/admin_homepage.html", {})
+    # return redirect("/home")
+
+
+@login_required
+def Logout(request):
+    logout(request)
+    return redirect('/home')

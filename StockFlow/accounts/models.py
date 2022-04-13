@@ -1,5 +1,7 @@
 
 from django.db import models
+from django.core.validators import RegexValidator
+
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
@@ -9,13 +11,18 @@ DEC="declined"
 NON="None"
 PORTFOLIO_CHOICES=((WAIT,"waiting"),(CON,"confirmed"),(DEC,"declined"),(NON,"None"))
 
+
+USERNAME_REGEX = '^[a-zA-Z0-9.+-]*$'
+
+
 class MyAccManager(BaseUserManager):
-    def create_Customer(self,full_name,email,password,city,Mobile):
+    def create_Customer(self,username,full_name,email,password,city,Mobile):
         if not email:
             raise ValueError("Users must have an email address")
         if not full_name:
             raise ValueError("Users must have an full name")
         customer = self.model(
+            username=username,
             full_name = full_name,
             email=self.normalize_email(email),
             city=city,
@@ -26,12 +33,13 @@ class MyAccManager(BaseUserManager):
         customer.save(using=self._db)
         return customer
 
-    def create_Agent(self,full_name,email,password,city,Mobile):
+    def create_Agent(self,username,full_name,email,password,city,Mobile):
         if not email:
             raise ValueError("Users must have an email address")
         if not full_name:
             raise ValueError("Users must have an full name")
         agent = self.model(
+            username=username,
             full_name = full_name,
             email=self.normalize_email(email),
             city=city,
@@ -43,8 +51,25 @@ class MyAccManager(BaseUserManager):
         agent.save(using=self._db)
         return agent
 
-    def create_Admin(self,email,full_name,password):
+    def create_superuser(self,username,email,password=None):
+            user = self.create_customer(
+                username = username,
+                email=self.normalize_email(email),
+                full_name='Admin',
+                Mobile='',
+                city='',
+                password = password,
+            
+            )
+            user.is_Admin = True
+            user.is_Agent = True
+            user.is_Customer = True
+            user.save(using=self._db)
+            return user
+
+    def create_Admin(self,username,email,full_name,password):
         admin = self.model(
+            username=username,
             full_name = full_name,
             email=self.normalize_email(email),
             password=password,
@@ -54,6 +79,14 @@ class MyAccManager(BaseUserManager):
         return admin
 
 class User(AbstractBaseUser):
+    username                    = models.CharField(
+        max_length=300,
+        validators = [
+            RegexValidator(regex = USERNAME_REGEX,
+            message='Username must be alphanumeric or contain numbers',
+            code='invalid_username'
+            )],
+         unique=True,default='user')
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -68,6 +101,8 @@ class User(AbstractBaseUser):
     full_name = models.CharField(max_length=80)
     city = models.CharField(max_length=50)
     Mobile = models.CharField(max_length=10)
+
+    is_staff = models.BooleanField(default=False)
     
     isConfirmedAgent = models.BooleanField(default=False)#if Agent is already got confirmation from Admin
 
@@ -75,28 +110,15 @@ class User(AbstractBaseUser):
     # notice the absence of a "Password field", that is built in.
 
     objects = MyAccManager()
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = [] # Email & Password are required by default.
-
-    def get_full_name(self):
-        # The user is identified by their email address
-        return self.full_name
-
-    def get_email(self):
-        # The user is identified by their email address
-        return self.email
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email'] # Email & Password are required by default.
 
     def __str__(self):
-        return self.email
-
-    def has_perm(self, perm, obj=None):
-        "Does the user have a specific permission?"
-        # Simplest possible answer: Yes, always
-        return True
-
-    def has_module_perms(self, app_label):
-        "Does the user have permissions to view the app `app_label`?"
-        # Simplest possible answer: Yes, always
+        return self.username
+        
+    def has_perm(self,perm,obj=None):
+        return self.is_admin
+    def has_module_perms(self,app_label):
         return True
 
     @property

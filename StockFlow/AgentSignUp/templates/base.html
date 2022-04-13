@@ -57,7 +57,7 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="/home">Home<span class="sr-only">(current)</span></a>
                 </li>
-                {% if request.user.is_authenticated %}
+                {% if not request.user.is_authenticated %}
                 <!--!!!Need to be changed to 'not' before finishing!!!-->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -84,7 +84,7 @@
         </div>
         <span class="navbar-text">
             {% if request.user.is_authenticated %}
-            <p>Hi {{request.user.username} <a href="#"> Logout </a></p>
+            <p>Hi {{request.user.username} <a href="/logout"> Logout </a></p>
             {% else %}
             <div> Welcome, Please sign in </div>
             {% endif %}
