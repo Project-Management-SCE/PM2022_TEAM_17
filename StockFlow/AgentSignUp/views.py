@@ -22,14 +22,15 @@ def CustomerSignIn(response):
         try:
             cust = User.objects.get(email = emailCheck,password = passwordCheck,is_Customer=True)
         except User.DoesNotExist: # if customer with such email or password doesn't exists or some of the data is wrong
-            return render(response, "CustomerSignUp/signin_page.html", {'alert': True})
+            messages.error(response, "one or more of the credentials are incorrect!")
+            return render(response, "CustomerSignUp/signin_page.html", {})
         if cust is not None:
             auth.login(response, cust)
             messages.success(response,"Sign in successfully!")
             return redirect('/')
             #return render(response, "AgentSignUp/home.html", {})
         else:
-            return render(response, "CustomerSignUp/signin_page.html", {'alert': True})
+            return render(response, "CustomerSignUp/signin_page.html", {})
     else:
         return render(response, "CustomerSignUp/signin_page.html", {})
 
@@ -111,7 +112,7 @@ def AgentSignUp(response):
     return render(response, "AgentSignUp/signup_page.html", {"form":form})
 
 def home(response):
-    return render(response, "AgentSignUp/home.html", {})
+    return render(response, "home.html", {})
 
 def AdminSignIn(response):
     if response.method == "POST":

@@ -39,7 +39,8 @@
 
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+    <!--avoid fake favicon requests-->
 
     <title>
         {% block title %}{% endblock %}
@@ -57,7 +58,7 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="/home">Home<span class="sr-only">(current)</span></a>
                 </li>
-                {% if request.user.is_authenticated %}
+                {% if not request.user.is_authenticated %}
                 <!--!!!Need to be changed to 'not' before finishing!!!-->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
