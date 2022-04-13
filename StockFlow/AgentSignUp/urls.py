@@ -12,4 +12,5 @@ urlpatterns = [
     path("admin_signin/", views.AdminSignIn, name="admin_signin"),
     path("admin_homepage/", views.AdminHomePage, name="admin_homepage"),
     path("logout", views.Logout, name="logout"),
+     path("admin_agentrequestslist/", views.AgentRequestsList, name="admin_agentrequestslist"),
 ]

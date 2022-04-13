@@ -1,5 +1,6 @@
 from email import message
 from re import A
+from typing import List
 from django.forms import PasswordInput
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -153,9 +154,12 @@ def AdminHomePage(request):
     # Id = request.user.
     # admin = User.objects.get(email=Id)
     # if admin.is_Admin ==True:
-    user=request.user.username
+    username=request.user.username
+    is_Admin=request.user.is_Admin
     #User.objects.get()
-    return render(request, "AdminHomePage/admin_homepage.html", {})
+    if is_Admin:
+        return render(request, "AdminHomePage/admin_homepage.html", {"username":username})
+    return redirect("/home") 
     # return redirect("/home")
 
 
@@ -163,3 +167,22 @@ def AdminHomePage(request):
 def Logout(request):
     logout(request)
     return redirect('/home')
+
+@login_required
+def AgentRequestsList(request):
+    agents = User.objects.filter(isConfirmedAgent=False).filter(is_Agent=True)
+    if request.method == "POST":
+        #agentID=request.POST.get("confirm")
+        agentID=request.POST.get("confirm")
+        if agentID is not None:
+            # confirm=request.POST.get("confirm")
+            # requestagent=confirm["data"]
+            for agent in agents:
+                if agentID==agent.ID:
+                    agent.isConfirmedAgent=True
+                    #email
+                    agent.save()
+            agents = User.objects.filter(isConfirmedAgent=False).filter(is_Agent=True)
+        if request.POST.get("decline"):
+            pass
+    return render(request, "AdminHomePage/admin_agentrequestslist.html", {"agents":agents})
