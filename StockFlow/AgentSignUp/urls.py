@@ -9,4 +9,6 @@ urlpatterns = [
     path("agent_signin/", views.AgentSignIn, name="agent_signin"),
     path("cust_signin/", views.CustomerSignIn, name="cust_signin"),
     path("cust_signup/", views.CustomerSignUp, name="cust_signup"),
+    path("admin_signin/", views.AdminSignIn, name="admin_signin"),
+    path("admin_homepage/", views.AdminHomePage, name="admin_homepage"),
 ]
