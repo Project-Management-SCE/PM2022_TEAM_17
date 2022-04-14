@@ -23,7 +23,7 @@ class TestAgentUser(TestCase):
 
     def test_Agent_signup_url(self):
         response = self.client.get("/agent_signup/")
-        self.assertEqual(response.status_code,200)
+        self.assertEqual(response.status_code,200) # status code 200 is render method
         self.assertTemplateUsed(response,'AgentSignUp/signup_page.html')
 
     def test_Agent_signup_form(self):
@@ -34,29 +34,40 @@ class TestAgentUser(TestCase):
             'password': self.agent.get_password(),
             'Mobile' : self.agent.get_mobile()
         })
-        self.assertEqual(response.status_code,200)
+        self.assertEqual(response.status_code,200) # status code 200 is render method
         users = User.objects.all()
         self.assertEqual(users.count(), 1)
 
 
     def test_Agent_signin_url(self):
         response = self.client.get("/agent_signin/")
-        self.assertEqual(response.status_code,200)
+        self.assertEqual(response.status_code,200) # status code 200 is render method
         self.assertTemplateUsed(response,'AgentSignUp/signin_page.html')
 
     def test_Agent_signin_form(self):
         response = self.client.post(reverse('AgentSignUp:agent_signin'), data={
             'email':self.agent.get_email(),
             'password':self.agent.get_password()})
-        self.assertEqual(response.status_code,302)
+        self.assertEqual(response.status_code,302) # status code 302 is redirect method
 
+    def test_wrong_Agent_signin_form(self):
+        response = self.client.post(reverse('AgentSignUp:agent_signin'), data={
+            'email':'wrongEmail@test.com',
+            'password':'wrongPass'})
+        self.assertEqual(response.status_code,200) # status code 200 is render method
     
 
 class TestCustomerUser(TestCase):
     def setUp(self):
-        self.customer = User.objects.create_Customer('testCustUserName','testCustName','testCustEmail@test.com','testCustPass','testCustCity','Cust1234567890',)
-        self.customer.is_active = False
-        self.client = Client()
+        self.data = {
+            'username':'testCustUserName',
+            'full_name':'testCustName',
+            'email':'testCustEmail@test.com',
+            'password':'testCustPass',
+            'city':'testCustCity',
+            'Mobile':'Cust1234567890'
+        }
+        self.customer = User.objects.create_Customer(self.data['username'],self.data['full_name'],self.data['email'],self.data['password'],self.data['city'],self.data['Mobile'])
 
     def test_Customer_exists(self):
         self.assertTrue(self.customer)
@@ -70,31 +81,38 @@ class TestCustomerUser(TestCase):
         
     def test_Customer_signup_url(self):
         response = self.client.get("/cust_signup/")
-        self.assertEqual(response.status_code,200)
+        self.assertEqual(response.status_code,200) # status code 200 is render method
         self.assertTemplateUsed(response,'CustomerSignUp/signup_page.html')
 
     def test_Customer_signup_form(self):
-        self.client.login(email=self.customer.get_email(), password=self.customer.get_password())
-        #response = self.client.post(reverse('AgentSignUp:cust_signup'), data={
-        #    'email': self.customer.get_email(),
-        #    'full_name': self.customer.get_full_name(),
-        #    'city' : self.customer.get_city(),
-        #    'password': self.customer.get_password(),
-        #    'Mobile' : self.customer.get_mobile()
-        #})
-        #self.assertEqual(response.status_code,200)
-        #users = User.objects.all()
-        #self.assertEqual(users.count(), 1)
+        response = self.client.post(reverse('AgentSignUp:cust_signup'), data={
+            'email': self.customer.get_email(),
+            'full_name': self.customer.get_full_name(),
+            'city' : self.customer.get_city(),
+            'password': self.customer.get_password(),
+            'Mobile' : self.customer.get_mobile()
+        })
+        self.assertEqual(response.status_code,200) # status code 200 is render method
+        users = User.objects.all()
+        self.assertEqual(users.count(), 1)
 
 
     def test_Customer_signin_url(self):
         response = self.client.get("/cust_signin/")
-        self.assertEqual(response.status_code,200)
+        self.assertEqual(response.status_code,200) # status code 200 is render method
         self.assertTemplateUsed(response,'CustomerSignUp/signin_page.html')
 
     def test_Customer_signin_form(self):
-        pass
-
+        response = self.client.post(reverse('AgentSignUp:cust_signin'), data={
+            'emailLogin':self.customer.get_email(),
+            'passLogin':self.customer.get_password()})
+        self.assertEqual(response.status_code,302) # status code 302 is redirect method
+    
+    def test_wrong_Customer_signin_form(self):
+        response = self.client.post(reverse('AgentSignUp:cust_signin'), data={
+            'emailLogin':'wrongEmail@test.com',
+            'passLogin':'wrongPass'})
+        self.assertEqual(response.status_code,200) # status code 200 is render method
 
 
 
@@ -116,11 +134,17 @@ class TestAdminUser(TestCase):
     
     def test_admin_signin_url(self):
         response = self.client.get("/admin_signin/")
-        self.assertEqual(response.status_code,200)
+        self.assertEqual(response.status_code,200) # status code 200 is render method
         self.assertTemplateUsed(response,'AdminSignIn/admin_signin.html')
 
     def test_admin_signin_form(self):
         response = self.client.post(reverse('AgentSignUp:admin_signin'), data={
-            'email':self.admin.get_email(),
-            'password':self.admin.get_password()})
-        self.assertEqual(response.status_code,302)
+            'emailLogin':self.admin.get_email(),
+            'passLogin':self.admin.get_password()})
+        self.assertEqual(response.status_code,302) # status code 302 is redirect method
+
+    def test_wrong_Admin_signin_form(self):
+        response = self.client.post(reverse('AgentSignUp:admin_signin'), data={
+            'emailLogin':'wrongEmail@test.com',
+            'passLogin':'wrongPass'})
+        self.assertEqual(response.status_code,200) # status code 200 is render method
