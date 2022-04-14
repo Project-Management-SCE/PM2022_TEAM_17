@@ -173,34 +173,12 @@ def Logout(request):
 @login_required
 def AgentRequestsList(request):
     agents = User.objects.filter(isConfirmedAgent=False).filter(is_Agent=True)
-    # if request.method == "POST":
-    #     #agentID=request.POST.get("confirm")
-    #     agent1ID=request.POST.get("confirm")
-    #     if agent1ID is not None:
-    #         User.objects.filter(ID=agent1ID).update(isConfirmedAgent=True)
-    #         agent=User.objects.get(ID=agent1ID)        #email
-    #         email=agent.email
-    #         send_mail(
-    #             'Your Request!',
-    #             'Hello,Your request from StockFlow.com for Agent Account was confirmed,please enter the site to see the changes.Have A nice day:)',
-    #             settings.DEFAULT_FROM_EMAIL,
-    #             [email],
-    #             fail_silently=False,
-    #         )
-    #         agents = User.objects.filter(isConfirmedAgent=False).filter(is_Agent=True)
-    #     else:
-    #         agentID=request.POST.get("decline")
-    #         if agentID is not None:
-    #             agent=User.objects.get(ID=agentID)        # #email
-    #             email=agent.email
-    #             send_mail(
-    #                 'Your Request!',
-    #                 'Hello,Your request from StockFlow.com for Agent Account was declined.Have A nice day:)',
-    #                 settings.DEFAULT_FROM_EMAIL,
-    #                 [email],
-    #                 fail_silently=False,
-    #             )
-    #             User.objects.filter(ID=agentID).delete()
+    if request.method == "POST":
+        #agentID=request.POST.get("confirm")
+        if 'confirm' in request.POST:
+            agent_confirm(request)
+        if 'decline' in request.POST:
+            Agent_Decline(request)
     return render(request, "AdminHomePage/admin_agentrequestslist.html", {"agents":agents})
 
 def agent_confirm(request):
@@ -220,9 +198,11 @@ def agent_confirm(request):
                 fail_silently=False,
             )
             agents = User.objects.filter(isConfirmedAgent=False).filter(is_Agent=True)
-    return render(request, "AdminHomePage/admin_agentrequestslist.html", {"agents":agents})
+            return redirect('/admin_homepage')
+    #return render(request, "AdminHomePage/admin_agentrequestslist.html", {"agents":agents})
+    return redirect('/home')
 
-@login_required
+
 def Agent_Decline(request):
     agents = User.objects.filter(isConfirmedAgent=False).filter(is_Agent=True)
     if request.method == "POST":
