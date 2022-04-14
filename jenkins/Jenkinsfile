@@ -19,7 +19,7 @@ pipeline {
             } 
             
             steps {
-                sh 'python StockFlow/manage.py test  --verbose --junit-xml test-reports/results.xml'
+                sh 'python StockFlow/manage.py test '
             }
             post {
                 always {
