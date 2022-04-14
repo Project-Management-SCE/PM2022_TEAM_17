@@ -9,13 +9,6 @@ pipeline {
             }
             steps {
                 sh 'python -m py_compile StockFlow/manage.py'
-                run{
-                    command{
-                        python3 -m venv venv
-                        . venv/bin/activate
-                        pip install -r django-test
-                    }
-                }
             }
         }
         stage('Test') {
