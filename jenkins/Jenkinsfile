@@ -19,6 +19,9 @@ pipeline {
             } 
             
             steps {
+                always { 
+                    cleanWs()
+                }
                 sh 'python StockFlow/manage.py test '
             }
             post {
