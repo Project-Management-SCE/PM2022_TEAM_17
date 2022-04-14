@@ -11,12 +11,7 @@ pipeline {
                 sh 'python -m py_compile StockFlow/manage.py'
             }
         }
-        stage('Test') {
-            agent {
-                docker {
-                    image 'qnib/pytest'
-                }
-            }
+        stage('Test') { 
             steps {
                 sh 'py.test --verbose --junit-xml test-reports/results.xml StockFlow/AgentSignUp/tests/test_AgentSignUp.py'
             }
