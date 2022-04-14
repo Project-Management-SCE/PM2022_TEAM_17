@@ -1,11 +1,8 @@
 from email import message
 from re import A
-from django.forms import PasswordInput
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 #from requests import request
 from .forms import CreateNewAgent
-from .models import Agent, Customer
 from django.contrib import messages
 # Create your views here.
 from accounts.models import User
@@ -23,13 +20,15 @@ def CustomerSignIn(response):
             cust = User.objects.get(email = emailCheck,password = passwordCheck,is_Customer=True)
         except User.DoesNotExist: # if customer with such email or password doesn't exists or some of the data is wrong
             messages.error(response, "one or more of the credentials are incorrect!")
-            return render(response, "CustomerSignUp/signin_page.html", {})
+            return redirect("/cust_signin")
         if cust is not None:
             auth.login(response, cust)
             messages.success(response,"Sign in successfully!")
+            cust.is_active = True
             return redirect('/')
             #return render(response, "AgentSignUp/home.html", {})
         else:
+            
             return render(response, "CustomerSignUp/signin_page.html", {})
     else:
         return render(response, "CustomerSignUp/signin_page.html", {})
@@ -56,9 +55,9 @@ def CustomerSignUp(response):
                 cust.save()
                 return redirect("/home")
             else:
-                return render(response, "CustomerSignUp/signup_page.html", {'alert_email': True})
+                return render(response, "CustomerSignUp/signup_page.html", {})
         elif password != pass2:
-            return render(response, "CustomerSignUp/signup_page.html", {'alert_pass': True})
+            return render(response, "CustomerSignUp/signup_page.html", {})
     else:
         return render(response, "CustomerSignUp/signup_page.html", {})
 
@@ -77,7 +76,8 @@ def AgentSignIn(response):
         if agent is not None:
             auth.login(response, agent)
             messages.success(response, "Sign in successfully!")
-            return redirect("/agent_signin") 
+            agent.is_active = True
+            return redirect("/") 
     else:
         return render(response, "AgentSignUp/signin_page.html", {})
         
@@ -103,9 +103,9 @@ def AgentSignUp(response):
                 agent.save()
                 return redirect("/home")
             else:
-                return render(response, "AgentSignUp/signup_page.html", {'alert_email': True})
+                return render(response, "AgentSignUp/signup_page.html", {})
         elif password != pass2:
-            return render(response, "AgentSignUp/signup_page.html", {'alert_pass': True})
+            return render(response, "AgentSignUp/signup_page.html", {})
             
     else:
         form = CreateNewAgent()
