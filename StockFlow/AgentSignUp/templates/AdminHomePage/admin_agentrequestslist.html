@@ -24,7 +24,14 @@
                 <td>{{agent.email}}</td>
                 <td>{{agent.city}}</td>
                 <td>{{agent.Mobile}}</td>
-                <td><button type="submit" style="background-color:greenyellow" name="confirm" id="confirm"><input hidden=True name="confirm" value="{{agent.ID}}">Confirm</button></td>
+                <form action="agent_confirm"  method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <td>
+                    <button type="submit" style="background-color:greenyellow" claa="confirm" name="confirm" id="confirm" value="{{agent.ID}}">
+                      Confirm</button>
+                    </td>
+                </form>
+                <!--<input hidden=True name="confirm" value="{{agent.ID}}">-->
                 <td><button type="submit" style="background-color:red" name="decline" ><input hidden=True name="decline" value="{{agent.ID}}">Decline</button></td>
                 </tr>
             </form>

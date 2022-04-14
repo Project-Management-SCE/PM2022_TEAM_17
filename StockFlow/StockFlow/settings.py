@@ -90,7 +90,7 @@ TEMPLATES = [
 ]
 
 
-AUTH_USER_MODEL='accounts.User'
+#AUTH_USER_MODEL='accounts.User'
 
 WSGI_APPLICATION = 'StockFlow.wsgi.application'
 
