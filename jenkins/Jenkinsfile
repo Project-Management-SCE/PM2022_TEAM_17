@@ -8,7 +8,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'pip install django-test'
+                sh 'sudo pip install django-test'
                 sh 'python -m py_compile StockFlow/manage.py'
             }
         }
