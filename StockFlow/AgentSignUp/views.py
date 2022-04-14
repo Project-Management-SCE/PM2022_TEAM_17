@@ -12,6 +12,7 @@ from django.contrib import messages
 from accounts.models import User
 from django.contrib.auth import authenticate, login ,logout
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 
 
 def CustomerSignIn(response):
@@ -173,16 +174,29 @@ def AgentRequestsList(request):
     agents = User.objects.filter(isConfirmedAgent=False).filter(is_Agent=True)
     if request.method == "POST":
         #agentID=request.POST.get("confirm")
-        agentID=request.POST.get("confirm")
-        if agentID is not None:
-            # confirm=request.POST.get("confirm")
-            # requestagent=confirm["data"]
-            for agent in agents:
-                if agentID==agent.ID:
-                    agent.isConfirmedAgent=True
-                    #email
-                    agent.save()
+        agent1ID=request.POST.get("confirm")
+        if agent1ID is not None:
+            User.objects.filter(ID=agent1ID).update(isConfirmedAgent=True)
+            agent=User.objects.get(ID=agent1ID)        # #email
+            email=agent.email
+            send_mail(
+                'Your Request!',
+                'Hello,Your request from StockFlow.com for Agent Account was confirmed,please enter the site to see the changes.Have A nice day:)',
+                'stockflowteam17@gmail.com',
+                [email],
+                fail_silently=False,
+            )
             agents = User.objects.filter(isConfirmedAgent=False).filter(is_Agent=True)
-        if request.POST.get("decline"):
-            pass
+        agentID=request.POST.get("decline")
+        if agentID is not None:
+            agent=User.objects.get(ID=agentID)        # #email
+            email=agent.email
+            send_mail(
+                'Your Request!',
+                'Hello,Your request from StockFlow.com for Agent Account was declined.Have A nice day:)',
+                'stockflowteam17@gmail.com',
+                [email],
+                fail_silently=False,
+            )
+            User.objects.filter(ID=agentID).delete()
     return render(request, "AdminHomePage/admin_agentrequestslist.html", {"agents":agents})

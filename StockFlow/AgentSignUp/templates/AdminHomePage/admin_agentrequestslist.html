@@ -25,7 +25,7 @@
                 <td>{{agent.city}}</td>
                 <td>{{agent.Mobile}}</td>
                 <td><button type="submit" style="background-color:greenyellow" name="confirm" id="confirm"><input hidden=True name="confirm" value="{{agent.ID}}">Confirm</button></td>
-                <td><button type="submit" style="background-color:red" name="decline" value={agent.ID}>Decline</button></td>
+                <td><button type="submit" style="background-color:red" name="decline" ><input hidden=True name="decline" value="{{agent.ID}}">Decline</button></td>
                 </tr>
             </form>
         {%endfor%}
