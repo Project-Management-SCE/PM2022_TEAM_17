@@ -9,6 +9,7 @@ pipeline {
             }
             steps {
                 sh 'python -m py_compile StockFlow/manage.py'
+                sh 'pip install -r django-test'
             }
         }
         stage('Test') {
