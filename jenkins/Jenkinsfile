@@ -18,7 +18,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'py.test --verbose --junit-xml test-reports/results.xml AgentSignUp/tests/test_AgentSignUp.py'
+                sh 'py.test --verbose --junit-xml test-reports/results.xml tests/test_AgentSignUp.py'
             }
             post {
                 always {
