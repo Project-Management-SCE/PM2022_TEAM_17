@@ -93,7 +93,7 @@ class User(AbstractBaseUser):
         unique=True,
     )
     ID= models.AutoField(primary_key=True)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     is_Customer = models.BooleanField(default=False)
     is_Agent = models.BooleanField(default=False) 
     is_Admin = models.BooleanField(default=False) 
@@ -102,16 +102,43 @@ class User(AbstractBaseUser):
     city = models.CharField(max_length=50)
     Mobile = models.CharField(max_length=10)
 
+
     is_staff = models.BooleanField(default=False)
     
+
     isConfirmedAgent = models.BooleanField(default=False)#if Agent is already got confirmation from Admin
 
     isPortfolio=models.CharField(max_length=10,choices=PORTFOLIO_CHOICES,default="None")#if Customer is requesting,waiting or got declined for portfolio
     # notice the absence of a "Password field", that is built in.
 
     objects = MyAccManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = [] # Email & Password are required by default.
+
+    def get_full_name(self):
+        # The user is identified by their full name
+        return self.full_name
+
+    def get_email(self):
+        # The user is identified by their email address
+        return self.email
+
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email'] # Email & Password are required by default.
+
+
+    def get_password(self):
+        # The user is identified by their password
+        return self.password
+
+    def get_city(self):
+        # The user is identified by their city
+        return self.city
+
+    def get_mobile(self):
+        # The user is identified by their mobile number
+        return self.Mobile
 
     def __str__(self):
         return self.username
