@@ -26,17 +26,14 @@ def CustomerSignIn(response):
             cust = User.objects.get(email = emailCheck,password = passwordCheck,is_Customer=True)
         except User.DoesNotExist: # if customer with such email or password doesn't exists or some of the data is wrong
             messages.error(response, "one or more of the credentials are incorrect!")
-            return redirect("/cust_signin")
-        if cust is not None:
+            return render(response, "CustomerSignUp/signin_page.html", {})
+        if cust is not None:    
             login(response, cust)
             messages.success(response,"Sign in successfully!")
-            cust.is_active = True
             return redirect('/')
             #return render(response, "AgentSignUp/home.html", {})
-        else:
-            
-            return render(response, "CustomerSignUp/signin_page.html", {})
     else:
+        
         return render(response, "CustomerSignUp/signin_page.html", {})
 
 def CustomerSignUp(response):
@@ -79,15 +76,12 @@ def AgentSignIn(response):
             agent = User.objects.get(email = emailCheck,password = passwordCheck)
         except User.DoesNotExist: # if agent with such email or password doesn't exists or some of the data is wrong
             messages.error(response, "one or more of the credentials are incorrect!")
-            return redirect("/agent_signin")
+            return render(response, "AgentSignUp/signin_page.html", {})
         if agent is not None:
             login(response, agent)
             messages.success(response, "Sign in successfully!")
-
             agent.is_active = True
-            return redirect("/") 
-
-            return redirect("/home") 
+            return redirect("/")  
 
     else:
         return render(response, "AgentSignUp/signin_page.html", {})
