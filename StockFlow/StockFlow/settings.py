@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'AgentSignUp.apps.AgentsignupConfig',
-    'django_jenkins',
     'accounts',
 ]
 
