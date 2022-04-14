@@ -104,14 +104,14 @@ class TestCustomerUser(TestCase):
 
     def test_Customer_signin_form(self):
         response = self.client.post(reverse('AgentSignUp:cust_signin'), data={
-            'email':self.customer.get_email(),
-            'password':self.customer.get_password()})
+            'emailLogin':self.customer.get_email(),
+            'passLogin':self.customer.get_password()})
         self.assertEqual(response.status_code,302) # status code 302 is redirect method
     
     def test_wrong_Customer_signin_form(self):
         response = self.client.post(reverse('AgentSignUp:cust_signin'), data={
-            'email':'wrongEmail@test.com',
-            'password':'wrongPass'})
+            'emailLogin':'wrongEmail@test.com',
+            'passLogin':'wrongPass'})
         self.assertEqual(response.status_code,200) # status code 200 is render method
 
 
@@ -139,7 +139,12 @@ class TestAdminUser(TestCase):
 
     def test_admin_signin_form(self):
         response = self.client.post(reverse('AgentSignUp:admin_signin'), data={
-            'email':self.admin.get_email(),
-            'password':self.admin.get_password()})
+            'emailLogin':self.admin.get_email(),
+            'passLogin':self.admin.get_password()})
         self.assertEqual(response.status_code,302) # status code 302 is redirect method
 
+    def test_wrong_Admin_signin_form(self):
+        response = self.client.post(reverse('AgentSignUp:admin_signin'), data={
+            'emailLogin':'wrongEmail@test.com',
+            'passLogin':'wrongPass'})
+        self.assertEqual(response.status_code,200) # status code 200 is render method
