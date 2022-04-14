@@ -1,8 +1,8 @@
-from dataclasses import dataclass
+
 from django.test import TestCase, Client
 from accounts.models import User
 from django.urls import reverse
-from AgentSignUp.views import AgentSignUp,CustomerSignIn
+
 
 class TestAgentUser(TestCase):
 
