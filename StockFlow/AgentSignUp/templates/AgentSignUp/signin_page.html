@@ -33,14 +33,14 @@
                     {% csrf_token %}
                     <!-- Email input -->
                     <div class="form-outline mb-4">
-                        <label class="form-label" for="form3Example3">Email address</label>
-                        <input type="email" name="emailLogin" id="form3Example3" required=True class="form-control form-control-lg" placeholder="Enter your email address" />
+                        <label class="form-label" for="form3Example3">Email Address</label>
+                        <input type="email" name="email" id="form3Example3" required=True class="form-control form-control-lg" placeholder="Enter your email address" />
                     </div>
 
                     <!-- Password input -->
                     <div class="form-outline mb-3">
                         <label class="form-label" for="form3Example4">Password</label>
-                        <input type="password" name="passLogin" id="form3Example4" required=True class="form-control form-control-lg" placeholder="Enter password" />
+                        <input type="password" name="password" id="form3Example4" required=True class="form-control form-control-lg" placeholder="Enter password" />
                     </div>
                     {% if messages %} {% for message in messages %} {% if message.tags == 'error' %}
                     <div class="d-flex justify-content-center m-2 alert alert-danger" role="alert"> {{message}} </div>
