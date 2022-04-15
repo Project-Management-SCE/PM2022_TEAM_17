@@ -19,7 +19,7 @@ pipeline {
             } 
             
             steps {
-                sh 'python -m py_compile StockFlow/AgentSignUp/tests/test_AgentSignUp.py  --junit-xml test-reports/results.xml'
+                sh 'python -m py_compile StockFlow/AgentSignUp/tests/test_AgentSignUp.py'
             }
             post {
                 always {
