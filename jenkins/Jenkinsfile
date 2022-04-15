@@ -21,7 +21,7 @@ pipeline {
             
              steps{
                 withEnv(["HOME=${env.WORKSPACE}"]){
-                    sh 'py.test --verbose --junit-xml test-reports/results.xml StockFlow/AgentSignUp/tests/test_AgentSignUp.py'
+                    sh 'python -m pytest --verbose --junit-xml test-reports/results.xml StockFlow/AgentSignUp/tests/test_AgentSignUp.py'
                 }
             }
             post {
