@@ -22,7 +22,7 @@ pipeline {
                 always { 
                     cleanWs()
                 }
-                sh 'python -m py_compile StockFlow/AgentSignUp/test/test_AgentSignUp.py'
+                sh 'python -m py_compile StockFlow/AgentSignUp/tests/test_AgentSignUp.py'
             }
             post {
                 always {
