@@ -19,14 +19,10 @@ pipeline {
             } 
             
             steps {
-                always { 
-                    cleanWs()
-                }
                 sh 'python -m py_compile StockFlow/AgentSignUp/tests/test_AgentSignUp.py'
             }
             post {
-                always {
-                    junit 'test-reports/results.xml'
+                
                 }
             }
         }
