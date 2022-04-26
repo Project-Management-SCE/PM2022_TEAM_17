@@ -1,6 +1,4 @@
 
-import sys
-sys.path.append('//StockFlow/accounts')
 from django.test import TestCase, Client
 from accounts.models import User
 from django.urls import reverse
