@@ -9,13 +9,6 @@
 {% endif %}
 
 <style type="text/css">
-    h2 {
-        font-size: 40px;
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        margin-left: 40%;
-        margin-top: 40px;
-    }
-    
     .form-group {
         font-size: 18px;
         width: 25em;
@@ -30,8 +23,9 @@
         background-color: rgba(221, 230, 233, 0.823);
     }
 </style>
-<section class="vh-100" style="background-color: rgba(221, 230, 233, 0.823);">
-    <div class="container h-100">
+
+<section class="vh-200" style="background-color: rgba(221, 230, 233, 0.823);">
+    <div class="container h-200">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-lg-12 col-xl-11">
                 <div class="card text-black" style="border-radius: 20px;">
@@ -43,6 +37,14 @@
                                 <p class="mb-5 mx-1 mx-md-4 mt-4">Fields with * are required!</p>
                                 <form class="mx-1 mx-md-4" method="POST">
                                     {% csrf_token %}
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                        <div class="form-outline flex-fill mb-0">
+                                            <label class="form-label" for="nameInput">Username*</label>
+                                            <input type="text" name="username" class="form-control" required=True/>
+                                        </div>
+                                    </div>
+
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                         <div class="form-outline flex-fill mb-0">
@@ -93,7 +95,7 @@
 
 
                                     <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4 ">
-                                        <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                                        <button type="submit" class="btn btn-primary btn-lg ">Register</button>
                                     </div>
 
                                 </form>

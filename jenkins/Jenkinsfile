@@ -2,29 +2,32 @@ pipeline {
     agent none
     stages {
         stage('Build') {
-            agent {
+             agent {
                 docker {
-                    image 'python:2-alpine'
+                    image 'python:3-alpine'
                 }
             }
-            steps {
-                sh 'python -m py_compile StockFlow/manage.py'
+            steps {          
+                withEnv(["HOME=${env.WORKSPACE}"]){                  
+                    sh 'python -m py_compile StockFlow/manage.py'
+                }
             }
         }
         stage('Test') {
             agent {
                 docker {
-                    image 'qnib/pytest'
+                    image 'django'
+                    image 'python:3.7'
                 }
-            }
-            steps {
-                sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
-            }
-            post {
-                always {
-                    junit 'test-reports/results.xml'
+            } 
+            
+             steps{
+                withEnv(["HOME=${env.WORKSPACE}"]){
+                    sh 'pip install django-test'
+                    sh 'pip install django'
+                    sh 'python StockFlow/AgentSignUp/tests/test_AgentSignUp.py'
                 }
-            }
+             }
         }
     }
 }
