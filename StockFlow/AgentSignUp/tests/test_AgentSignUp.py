@@ -1,5 +1,5 @@
 
-from ...StockFlow import accounts
+from accounts import *
 from django.test import TestCase, Client
 from accounts.models import User
 from django.urls import reverse
