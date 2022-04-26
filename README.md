@@ -14,6 +14,3 @@ For running the project do the following:
 4. enter to the local host ip with port 8000:
     127.0.0.1:8000
 
- 
-5. accessing to the only working page (for now) go to:
-   127.0.0.1:8000/AgentSignUp
