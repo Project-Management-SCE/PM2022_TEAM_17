@@ -90,6 +90,9 @@ TEMPLATES = [
 
 AUTH_USER_MODEL='accounts.User'
 
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/user/accounts/'
+
 WSGI_APPLICATION = 'StockFlow.wsgi.application'
 
 

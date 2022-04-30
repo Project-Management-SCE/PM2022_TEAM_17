@@ -1,6 +1,7 @@
 from django.urls import path
-
 from . import views
+from django.contrib import admin
+
 
 app_name = 'AgentSignUp'
 urlpatterns = [
@@ -11,7 +12,16 @@ urlpatterns = [
     path("cust_signin/", views.CustomerSignIn, name="cust_signin"),
     path("cust_signup/", views.CustomerSignUp, name="cust_signup"),
     path("admin_signin/", views.AdminSignIn, name="admin_signin"),
+
     path("admin_homepage/", views.AdminHomePage, name="admin_homepage"),
+    path("agent_homepage/", views.AgentHomePage, name="agent_homepage"),
+    path("customer_homepage/", views.CustomerHomePage, name="customer_homepage"),
+
     path("logout", views.Logout, name="logout"),
     path("admin_agentrequestslist/", views.AgentRequestsList, name="admin_agentrequestslist"),
+
+    path("admin_homepage/search_stock", views.SearchStock, name="Search_Stock"),
+    path("agent_homepage/search_stock", views.SearchStock, name="Search_Stock"),
+    path("customer_homepage/search_stock", views.SearchStock, name="Search_Stock"),
+
 ]

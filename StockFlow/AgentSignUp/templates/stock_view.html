@@ -1,0 +1,11 @@
+{% extends "base.html" %} {% block title %} Stock Info {% endblock %} {% block content %}
+
+
+<section class="vh-100">
+    <h1>Ticker: {{ticker}}</h1>
+    <h1>Price: {{price}}</h1>
+    <h1>Recommendation: {{recom}}</h1>
+    <h1>Website: <a href="{{website}}" target="_blank">{{website}}</a></h1>
+</section>
+
+{% endblock %}

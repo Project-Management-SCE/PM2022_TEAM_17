@@ -1,4 +1,10 @@
-{% extends "base.html" %} {% block title %} Admin Sign in {% endblock %} {% block content %}
-<section class="vh-100"><h1>Hello {{username}}!</h1></section>
+{% extends "base.html" %} {% block title %} Admin Homepage {% endblock %} {% block content %}
+<section class="vh-100">
+    <h1>Hello {{username}}!</h1>
+    {% include "search_stock.html" %}
+
+</section>
+
+
 <a href="/admin_agentrequestslist"><button type="submit" class="btn btn-primary btn-lg"  >See Agent Requests</button></a>
 {% endblock %}

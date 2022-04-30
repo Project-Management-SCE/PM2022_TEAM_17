@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from email import message
 from re import A
 
@@ -15,6 +16,26 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
 
+import yfinance as yf
+
+
+
+def SearchStock(response):
+
+    if response.method == "POST":
+        searchStock = response.POST.get('searchStock')
+        stock = yf.Ticker(searchStock)
+        price = stock.info['regularMarketPrice']
+        symbol = stock.info['symbol']
+        recom = stock.info['recommendationKey']
+        website = stock.info['website']
+        return render(response, "stock_view.html", {"price": price, "ticker": symbol, "recom": recom, "website": website})
+        # if stock.info['regularMarketPrice']:
+        #     return render(response, "AgentSignUp/signup_page.html", {"stock":stock})
+
+        # else:
+        #return HttpResponse("<h1>No " + searchStock +  " ticker exist<h1>")
+
 
 def CustomerSignIn(response):
     if(response.user.is_authenticated):
@@ -29,8 +50,10 @@ def CustomerSignIn(response):
             return render(response, "CustomerSignUp/signin_page.html", {})
         if cust is not None:    
             login(response, cust)
+            cust.is_active = True
+            cust.save()
             messages.success(response,"Sign in successfully!")
-            return redirect('/')
+            return redirect('/customer_homepage')
             #return render(response, "AgentSignUp/home.html", {})
     else:
         
@@ -67,8 +90,8 @@ def CustomerSignUp(response):
 
 
 def AgentSignIn(response):
-    if(response.user.is_authenticated):
-        return redirect('/')
+    # if(response.user.is_authenticated):
+    #     return redirect('/')
     if response.method == "POST":
         emailCheck = response.POST.get('email')
         passwordCheck = response.POST.get('password')
@@ -81,10 +104,32 @@ def AgentSignIn(response):
             login(response, agent)
             messages.success(response, "Sign in successfully!")
             agent.is_active = True
-            return redirect("/")  
+            agent.save()
+            #return render(response, "AgentHomePage/agent_homepage.html", {})  
+            #return AgentHomePage(response)
+            #return render(response, "AgentHomePage/agent_homepage.html", {})
+            return redirect("/agent_homepage")
+            #return HttpResponse("<h1>No ticker exist<h1>")
+
 
     else:
         return render(response, "AgentSignUp/signin_page.html", {})
+
+# def AdminSignIn(response):
+#     if response.method == "POST":
+#         emailCheck = response.POST.get('emailLogin')
+#         passwordCheck = response.POST.get('passLogin')
+#         try:
+#             admin = User.objects.get(email = emailCheck,password = passwordCheck,is_Admin=True)
+#         except User.DoesNotExist: # if agent with such email or password doesn't exists or some of the data is wrong
+#             messages.error(response, "one or more of the credentials are incorrect!")
+#             return render(response, "AdminSignIn/admin_signin.html", {})
+#         if admin is not None:
+#             login(response, admin)
+#             messages.success(response, "Sign in successfully!")
+#             return redirect("/admin_homepage") 
+#     else:
+#         return render(response, "AdminSignIn/admin_signin.html", {})
 
     # if(request.user.is_authenticated):
     #     return redirect('/')
@@ -163,6 +208,32 @@ def AdminHomePage(request):
     #User.objects.get()
     if is_Admin:
         return render(request, "AdminHomePage/admin_homepage.html", {"username":username})
+    return redirect("/home") 
+    # return redirect("/home")
+
+@login_required
+def AgentHomePage(request):
+    # Id = request.user.
+    # admin = User.objects.get(email=Id)
+    # if admin.is_Admin ==True:
+    username=request.user.username
+    is_Agent=request.user.is_Agent
+    #User.objects.get()
+    if is_Agent:
+        return render(request, "AgentHomePage/agent_homepage.html", {"username":username})
+    return redirect("/home") 
+    # return redirect("/home")
+
+@login_required
+def CustomerHomePage(request):
+    # Id = request.user.
+    # admin = User.objects.get(email=Id)
+    # if admin.is_Admin ==True:
+    username=request.user.username
+    is_Customer=request.user.is_Customer
+    #User.objects.get()
+    if is_Customer:
+        return render(request, "CustomerHomePage/customer_homepage.html", {"username":username})
     return redirect("/home") 
     # return redirect("/home")
 

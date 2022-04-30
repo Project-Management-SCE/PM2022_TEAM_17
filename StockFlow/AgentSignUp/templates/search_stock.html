@@ -1,0 +1,6 @@
+
+<form method="post" action="search_stock" >
+    {% csrf_token %}
+    <input type="submit" value="Find Stock"><br><br>
+    <input type="text" name="searchStock" id="form3Example3" required=True class="form-control form-control-lg" placeholder="Enter Stock Ticker, ex. (MSFT)"/>
+</form>
