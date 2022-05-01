@@ -193,6 +193,8 @@ def AdminSignIn(response):
             return render(response, "AdminSignIn/admin_signin.html", {})
         if admin is not None:
             login(response, admin)
+            admin.is_active = True
+            admin.save()
             messages.success(response, "Sign in successfully!")
             return redirect("/admin_homepage") 
     else:
