@@ -77,15 +77,11 @@
                         <a class="dropdown-item" href="/cust_signup">Customer</a>
                     </div>
                 </li>
-<<<<<<< Updated upstream
-
-=======
                 <li class="nav-item dropdown">
                     {% elif request.user.is_authenticated and request.user.is_Customer and not is_Agent %}
                     <a class="nav-link" href="/customer_profile" id="navbarDropdownMenuLink">Profile</a> {% elif request.user.is_authenticated and not request.user.is_Customer and not is_Agent %}
                     <a class="nav-link" href="/agent_customer_requests" id="navbarDropdownMenuLink"> Customer Requests</a>
                 </li>
->>>>>>> Stashed changes
                 {% endif %}
             </ul>
 

@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 #from requests import request
 from .forms import CreateNewAgent
-from .models import Agent, Customer
+#from .models import Agent, Customer
 from django.contrib import messages
 # Create your views here.
 from accounts.models import User
@@ -164,27 +164,17 @@ def AdminHomePage(request):
     return redirect("/home") 
     # return redirect("/home")
 
-<<<<<<< Updated upstream
-=======
 @login_required
 def AgentHomePage(request):
     # Id = request.user.
     # admin = User.objects.get(email=Id)
     # if admin.is_Admin ==True:
-<<<<<<< Updated upstream
-    user=request.user
-=======
     isConfirmedAgent=request.user.isConfirmedAgent
->>>>>>> Stashed changes
     username=request.user.username
     is_Agent=request.user.is_Agent
     #User.objects.get()
     if is_Agent:
-<<<<<<< Updated upstream
-        return render(request, "AgentHomePage/agent_homepage.html", {"user":user,"username":username})
-=======
         return render(request, "AgentHomePage/agent_homepage.html", {"username":username,"isConfirmedAgent":isConfirmedAgent})
->>>>>>> Stashed changes
     return redirect("/home") 
     # return redirect("/home")
 
@@ -201,7 +191,6 @@ def CustomerHomePage(request):
     return redirect("/home") 
     # return redirect("/home")
 
->>>>>>> Stashed changes
 
 @login_required
 def Logout(request):
@@ -257,8 +246,6 @@ def Agent_Decline(request):
             )
             User.objects.filter(ID=agentID).delete()
     return render(request, "AdminHomePage/admin_agentrequestslist.html", {"agents":agents})
-<<<<<<< Updated upstream
-=======
 
 @login_required
 def Customer_Profile(request):
@@ -321,4 +308,3 @@ def portfolio_confirm(request):
             return redirect('/agent_homepage')
     #return render(request, "AdminHomePage/admin_agentrequestslist.html", {"agents":agents})
     return redirect('/home')
->>>>>>> Stashed changes
