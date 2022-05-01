@@ -1,15 +1,12 @@
-from asyncio.windows_events import NULL
 from email import message
 from re import A
-
 from typing import List
 from django.forms import PasswordInput
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-
-from accounts.models import WAIT
 #from requests import request
 from .forms import CreateNewAgent
+from .models import Agent, Customer
 from django.contrib import messages
 # Create your views here.
 from accounts.models import User
@@ -17,26 +14,6 @@ from django.contrib.auth import authenticate, login ,logout
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
-
-import yfinance as yf
-
-
-
-def SearchStock(response):
-
-    if response.method == "POST":
-        searchStock = response.POST.get('searchStock')
-        stock = yf.Ticker(searchStock)
-        price = stock.info['regularMarketPrice']
-        symbol = stock.info['symbol']
-        recom = stock.info['recommendationKey']
-        website = stock.info['website']
-        return render(response, "stock_view.html", {"price": price, "ticker": symbol, "recom": recom, "website": website})
-        # if stock.info['regularMarketPrice']:
-        #     return render(response, "AgentSignUp/signup_page.html", {"stock":stock})
-
-        # else:
-        #return HttpResponse("<h1>No " + searchStock +  " ticker exist<h1>")
 
 
 def CustomerSignIn(response):
@@ -48,17 +25,15 @@ def CustomerSignIn(response):
         try:
             cust = User.objects.get(email = emailCheck,password = passwordCheck,is_Customer=True)
         except User.DoesNotExist: # if customer with such email or password doesn't exists or some of the data is wrong
-            messages.error(response, "one or more of the credentials are incorrect!")
-            return render(response, "CustomerSignUp/signin_page.html", {})
-        if cust is not None:    
+            return render(response, "CustomerSignUp/signin_page.html", {'alert': True})
+        if cust is not None:
             login(response, cust)
-            cust.is_active = True
-            cust.save()
             messages.success(response,"Sign in successfully!")
-            return redirect('/customer_homepage')
+            return redirect('/')
             #return render(response, "AgentSignUp/home.html", {})
+        else:
+            return render(response, "CustomerSignUp/signin_page.html", {'alert': True})
     else:
-        
         return render(response, "CustomerSignUp/signin_page.html", {})
 
 def CustomerSignUp(response):
@@ -84,16 +59,16 @@ def CustomerSignUp(response):
                 cust.save()
                 return redirect("/home")
             else:
-                return render(response, "CustomerSignUp/signup_page.html", {})
+                return render(response, "CustomerSignUp/signup_page.html", {'alert_email': True})
         elif password != pass2:
-            return render(response, "CustomerSignUp/signup_page.html", {})
+            return render(response, "CustomerSignUp/signup_page.html", {'alert_pass': True})
     else:
         return render(response, "CustomerSignUp/signup_page.html", {})
 
 
 def AgentSignIn(response):
-    # if(response.user.is_authenticated):
-    #     return redirect('/')
+    if(response.user.is_authenticated):
+        return redirect('/')
     if response.method == "POST":
         emailCheck = response.POST.get('email')
         passwordCheck = response.POST.get('password')
@@ -101,37 +76,13 @@ def AgentSignIn(response):
             agent = User.objects.get(email = emailCheck,password = passwordCheck)
         except User.DoesNotExist: # if agent with such email or password doesn't exists or some of the data is wrong
             messages.error(response, "one or more of the credentials are incorrect!")
-            return render(response, "AgentSignUp/signin_page.html", {})
+            return redirect("/agent_signin")
         if agent is not None:
             login(response, agent)
             messages.success(response, "Sign in successfully!")
-            agent.is_active = True
-            agent.save()
-            #return render(response, "AgentHomePage/agent_homepage.html", {})  
-            #return AgentHomePage(response)
-            #return render(response, "AgentHomePage/agent_homepage.html", {})
-            return redirect("/agent_homepage")
-            #return HttpResponse("<h1>No ticker exist<h1>")
-
-
+            return redirect("/home") 
     else:
         return render(response, "AgentSignUp/signin_page.html", {})
-
-# def AdminSignIn(response):
-#     if response.method == "POST":
-#         emailCheck = response.POST.get('emailLogin')
-#         passwordCheck = response.POST.get('passLogin')
-#         try:
-#             admin = User.objects.get(email = emailCheck,password = passwordCheck,is_Admin=True)
-#         except User.DoesNotExist: # if agent with such email or password doesn't exists or some of the data is wrong
-#             messages.error(response, "one or more of the credentials are incorrect!")
-#             return render(response, "AdminSignIn/admin_signin.html", {})
-#         if admin is not None:
-#             login(response, admin)
-#             messages.success(response, "Sign in successfully!")
-#             return redirect("/admin_homepage") 
-#     else:
-#         return render(response, "AdminSignIn/admin_signin.html", {})
 
     # if(request.user.is_authenticated):
     #     return redirect('/')
@@ -173,16 +124,16 @@ def AgentSignUp(response):
                 agent.save()
                 return redirect("/home")
             else:
-                return render(response, "AgentSignUp/signup_page.html", {})
+                return render(response, "AgentSignUp/signup_page.html", {'alert_email': True})
         elif password != pass2:
-            return render(response, "AgentSignUp/signup_page.html", {})
+            return render(response, "AgentSignUp/signup_page.html", {'alert_pass': True})
             
     else:
         form = CreateNewAgent()
     return render(response, "AgentSignUp/signup_page.html", {"form":form})
 
 def home(response):
-    return render(response, "home.html", {})
+    return render(response, "AgentSignUp/home.html", {})
 
 def AdminSignIn(response):
     if response.method == "POST":
@@ -192,11 +143,9 @@ def AdminSignIn(response):
             admin = User.objects.get(email = emailCheck,password = passwordCheck,is_Admin=True)
         except User.DoesNotExist: # if agent with such email or password doesn't exists or some of the data is wrong
             messages.error(response, "one or more of the credentials are incorrect!")
-            return render(response, "AdminSignIn/admin_signin.html", {})
+            return redirect("/admin_signin")
         if admin is not None:
             login(response, admin)
-            admin.is_active = True
-            admin.save()
             messages.success(response, "Sign in successfully!")
             return redirect("/admin_homepage") 
     else:
@@ -215,16 +164,27 @@ def AdminHomePage(request):
     return redirect("/home") 
     # return redirect("/home")
 
+<<<<<<< Updated upstream
+=======
 @login_required
 def AgentHomePage(request):
     # Id = request.user.
     # admin = User.objects.get(email=Id)
     # if admin.is_Admin ==True:
+<<<<<<< Updated upstream
+    user=request.user
+=======
+    isConfirmedAgent=request.user.isConfirmedAgent
+>>>>>>> Stashed changes
     username=request.user.username
     is_Agent=request.user.is_Agent
     #User.objects.get()
     if is_Agent:
-        return render(request, "AgentHomePage/agent_homepage.html", {"username":username})
+<<<<<<< Updated upstream
+        return render(request, "AgentHomePage/agent_homepage.html", {"user":user,"username":username})
+=======
+        return render(request, "AgentHomePage/agent_homepage.html", {"username":username,"isConfirmedAgent":isConfirmedAgent})
+>>>>>>> Stashed changes
     return redirect("/home") 
     # return redirect("/home")
 
@@ -241,6 +201,7 @@ def CustomerHomePage(request):
     return redirect("/home") 
     # return redirect("/home")
 
+>>>>>>> Stashed changes
 
 @login_required
 def Logout(request):
@@ -296,6 +257,8 @@ def Agent_Decline(request):
             )
             User.objects.filter(ID=agentID).delete()
     return render(request, "AdminHomePage/admin_agentrequestslist.html", {"agents":agents})
+<<<<<<< Updated upstream
+=======
 
 @login_required
 def Customer_Profile(request):
@@ -311,9 +274,51 @@ def Customer_Profile(request):
 
 
 @login_required
-def Agent_Profile(request):
+def Agent_Customer_Requests(request):
     if request.user.is_Agent and not  request.user.is_Customer:
         customers = User.objects.filter(isPortfolio="waiting").filter(is_Customer=True)
-        return render(request, "Agent_Profile/agent_profilepage.html", {"customers":customers})
+        if request.method == "POST":
+            if 'confirm' in request.POST:
+                portfolio_confirm(request)
+            if 'decline' in request.POST:
+                portfolio_decline(request)
+        return render(request, "AgentHomePage/agent_customer_requests.html", {"customers":customers})
     else:
         return redirect('/home')
+
+def portfolio_decline(request):
+    customers = User.objects.filter(isPortfolio="waiting").filter(is_Customer=True)
+    if request.method == "POST":
+        custID=request.POST.get("decline")
+        if custID is not None:
+            agent=User.objects.get(ID=custID)        # #email
+            User.objects.filter(ID=custID).update(isPortfolio="None")
+            email=agent.email
+            send_mail(
+                'Your Request!',
+                'Hello,Your request from StockFlow.com for Portfolio was declined,You can try again.Have A nice day:)',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+    return render(request, "AgentHomePage/agent_customer_requests.html", {"customers":customers})
+
+
+def portfolio_confirm(request):
+    if request.method == "POST":
+        customerID=request.POST.get("confirm")
+        if customerID is not None:
+            User.objects.filter(ID=customerID).update(isPortfolio="confirmed")
+            cust=User.objects.get(ID=customerID)        #email
+            email=cust.email
+            send_mail(
+                'Your Request For Portfolio!',
+                'Hello,Your request from StockFlow.com for Portfolio was confirmed,please enter the site to see the changes.Have A nice day:)',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+            return redirect('/agent_homepage')
+    #return render(request, "AdminHomePage/admin_agentrequestslist.html", {"agents":agents})
+    return redirect('/home')
+>>>>>>> Stashed changes

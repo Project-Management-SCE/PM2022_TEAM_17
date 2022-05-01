@@ -1,8 +1,20 @@
 {% extends "base.html" %} {% block title %} Agent Homepage {% endblock %} {% block content %}
 <section class="vh-100">
     <h1>Hello {{username}}!</h1>
+<<<<<<< Updated upstream
+    {% if not user.is_authenticated %}
     {% include "search_stock.html" %}
+    {% else %}
+    <p>your still waiting for your user approval!</p>
+    {% endif %}
 
+=======
+    {% if isConfirmedAgent %}
+        {% include "search_stock.html" %}
+    {% else %}
+        <p>Your account hasn't been approved yet! </p>
+    {% endif %}
+>>>>>>> Stashed changes
 </section>
 
 {% endblock %}
