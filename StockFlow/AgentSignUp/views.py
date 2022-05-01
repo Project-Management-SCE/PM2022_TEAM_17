@@ -171,12 +171,20 @@ def AgentHomePage(request):
     # Id = request.user.
     # admin = User.objects.get(email=Id)
     # if admin.is_Admin ==True:
+<<<<<<< Updated upstream
     user=request.user
+=======
+    isConfirmedAgent=request.user.isConfirmedAgent
+>>>>>>> Stashed changes
     username=request.user.username
     is_Agent=request.user.is_Agent
     #User.objects.get()
     if is_Agent:
+<<<<<<< Updated upstream
         return render(request, "AgentHomePage/agent_homepage.html", {"user":user,"username":username})
+=======
+        return render(request, "AgentHomePage/agent_homepage.html", {"username":username,"isConfirmedAgent":isConfirmedAgent})
+>>>>>>> Stashed changes
     return redirect("/home") 
     # return redirect("/home")
 
@@ -249,3 +257,68 @@ def Agent_Decline(request):
             )
             User.objects.filter(ID=agentID).delete()
     return render(request, "AdminHomePage/admin_agentrequestslist.html", {"agents":agents})
+<<<<<<< Updated upstream
+=======
+
+@login_required
+def Customer_Profile(request):
+    if request.user.is_Customer and not request.user.is_Agent:
+        if request.method == "POST":
+            request.user.isPortfolio = "waiting"
+            request.user.save()
+            return render(request, "Customer_Profile/customer_profilepage.html", {})
+        else:
+            return render(request, "Customer_Profile/customer_profilepage.html", {})
+    else:
+        return redirect('/home')
+
+
+@login_required
+def Agent_Customer_Requests(request):
+    if request.user.is_Agent and not  request.user.is_Customer:
+        customers = User.objects.filter(isPortfolio="waiting").filter(is_Customer=True)
+        if request.method == "POST":
+            if 'confirm' in request.POST:
+                portfolio_confirm(request)
+            if 'decline' in request.POST:
+                portfolio_decline(request)
+        return render(request, "AgentHomePage/agent_customer_requests.html", {"customers":customers})
+    else:
+        return redirect('/home')
+
+def portfolio_decline(request):
+    customers = User.objects.filter(isPortfolio="waiting").filter(is_Customer=True)
+    if request.method == "POST":
+        custID=request.POST.get("decline")
+        if custID is not None:
+            agent=User.objects.get(ID=custID)        # #email
+            User.objects.filter(ID=custID).update(isPortfolio="None")
+            email=agent.email
+            send_mail(
+                'Your Request!',
+                'Hello,Your request from StockFlow.com for Portfolio was declined,You can try again.Have A nice day:)',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+    return render(request, "AgentHomePage/agent_customer_requests.html", {"customers":customers})
+
+
+def portfolio_confirm(request):
+    if request.method == "POST":
+        customerID=request.POST.get("confirm")
+        if customerID is not None:
+            User.objects.filter(ID=customerID).update(isPortfolio="confirmed")
+            cust=User.objects.get(ID=customerID)        #email
+            email=cust.email
+            send_mail(
+                'Your Request For Portfolio!',
+                'Hello,Your request from StockFlow.com for Portfolio was confirmed,please enter the site to see the changes.Have A nice day:)',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+            return redirect('/agent_homepage')
+    #return render(request, "AdminHomePage/admin_agentrequestslist.html", {"agents":agents})
+    return redirect('/home')
+>>>>>>> Stashed changes

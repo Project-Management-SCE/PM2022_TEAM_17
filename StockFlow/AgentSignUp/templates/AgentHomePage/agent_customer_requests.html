@@ -1,0 +1,53 @@
+{% extends 'base.html' %} {% block title %} {{request.user.full_name}} Profile Page {% endblock %} {% block content %}
+<div class="vh-100">
+    <div class="d-flex align-items-center flex-column bd-highlight mt-4 mb-3">
+        <h2>Hello {{request.user.full_name}}</h2>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Username</th>
+                <th scope="col">Full name</th>
+                <th scope="col">Email</th>
+                <th scope="col">City</th>
+                <th scope="col">Mobile</th>
+                <th scope="col">Confirm</th>
+                <th scope="col">Decline</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for customer in customers%}
+            <form method="post" action="#">
+                {% csrf_token %}
+                <tr>
+                    <td>{{customer.ID}}</td>
+                    <td>{{customer.username}}</td>
+                    <td>{{customer.full_name}}</td>
+                    <td>{{customer.email}}</td>
+                    <td>{{customer.city}}</td>
+                    <td>{{customer.Mobile}}</td>
+                    <form action='' method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <td>
+                            <button type="submit" style="background-color:greenyellow" class="confirm" name="confirm" id="confirm" value="{{customer.ID}}">Confirm</button>
+                        </td>
+                    </form>
+                    <!--<input hidden=True name="confirm" value="{{customer.ID}}">-->
+                    <!--<input hidden=True name="decline" value="{{customer.ID}}">-->
+                    <form action='' method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <td>
+                            <button type="submit" style="background-color:red" class="decline" name="decline" id="decline" value="{{customer.ID}}">Decline</button>
+                        </td>
+                    </form>
+                </tr>
+            </form>
+            {%endfor%}
+        </tbody>
+    </table>
+    </section>
+
+</div>
+
+{% endblock %}
