@@ -164,6 +164,36 @@ def AdminHomePage(request):
     return redirect("/home") 
     # return redirect("/home")
 
+<<<<<<< Updated upstream
+=======
+@login_required
+def AgentHomePage(request):
+    # Id = request.user.
+    # admin = User.objects.get(email=Id)
+    # if admin.is_Admin ==True:
+    user=request.user
+    username=request.user.username
+    is_Agent=request.user.is_Agent
+    #User.objects.get()
+    if is_Agent:
+        return render(request, "AgentHomePage/agent_homepage.html", {"user":user,"username":username})
+    return redirect("/home") 
+    # return redirect("/home")
+
+@login_required
+def CustomerHomePage(request):
+    # Id = request.user.
+    # admin = User.objects.get(email=Id)
+    # if admin.is_Admin ==True:
+    username=request.user.username
+    is_Customer=request.user.is_Customer
+    #User.objects.get()
+    if is_Customer:
+        return render(request, "CustomerHomePage/customer_homepage.html", {"username":username})
+    return redirect("/home") 
+    # return redirect("/home")
+
+>>>>>>> Stashed changes
 
 @login_required
 def Logout(request):
