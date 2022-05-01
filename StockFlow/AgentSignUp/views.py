@@ -6,6 +6,8 @@ from typing import List
 from django.forms import PasswordInput
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+
+from accounts.models import WAIT
 #from requests import request
 from .forms import CreateNewAgent
 from django.contrib import messages
@@ -292,3 +294,12 @@ def Agent_Decline(request):
             )
             User.objects.filter(ID=agentID).delete()
     return render(request, "AdminHomePage/admin_agentrequestslist.html", {"agents":agents})
+
+@login_required
+def Customer_Profile(request):
+    if request.method == "POST":
+        request.user.isPortfolio = "waiting"
+        request.user.save()
+        return render(request, "Customer_Profile/customer_profilepage.html", {})
+    else:
+        return render(request, "Customer_Profile/customer_profilepage.html", {})
