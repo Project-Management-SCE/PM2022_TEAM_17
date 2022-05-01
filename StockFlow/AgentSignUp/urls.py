@@ -23,6 +23,7 @@ urlpatterns = [
     path("admin_homepage/search_stock", views.SearchStock, name="Search_Stock"),
     path("agent_homepage/search_stock", views.SearchStock, name="Search_Stock"),
     path("customer_homepage/search_stock", views.SearchStock, name="Search_Stock"),
-    path("customer_profile", views.Customer_Profile, name="Customer Profile")
+    path("customer_profile", views.Customer_Profile, name="Customer Profile"),
+    path("agent_profile", views.Agent_Profile, name="Agent Profile"),
 
 ]

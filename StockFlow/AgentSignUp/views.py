@@ -297,9 +297,21 @@ def Agent_Decline(request):
 
 @login_required
 def Customer_Profile(request):
-    if request.method == "POST":
-        request.user.isPortfolio = "waiting"
-        request.user.save()
-        return render(request, "Customer_Profile/customer_profilepage.html", {})
+    if request.user.is_Customer and not request.user.is_Agent:
+        if request.method == "POST":
+            request.user.isPortfolio = "waiting"
+            request.user.save()
+            return render(request, "Customer_Profile/customer_profilepage.html", {})
+        else:
+            return render(request, "Customer_Profile/customer_profilepage.html", {})
     else:
-        return render(request, "Customer_Profile/customer_profilepage.html", {})
+        return redirect('/home')
+
+
+@login_required
+def Agent_Profile(request):
+    if request.user.is_Agent and not  request.user.is_Customer:
+        customers = User.objects.filter(isPortfolio="waiting").filter(is_Customer=True)
+        return render(request, "Agent_Profile/agent_profilepage.html", {"customers":customers})
+    else:
+        return redirect('/home')

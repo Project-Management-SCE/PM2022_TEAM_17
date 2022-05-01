@@ -2,46 +2,46 @@
 <section class="vh-100">
     <table class="table">
         <thead>
-          <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Username</th>
-            <th scope="col">Full name</th>
-            <th scope="col">Email</th>
-            <th scope="col">City</th>
-            <th scope="col">Mobile</th>
-            <th scope="col">Confirm</th>
-            <th scope="col">Decline</th>
-          </tr>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Username</th>
+                <th scope="col">Full name</th>
+                <th scope="col">Email</th>
+                <th scope="col">City</th>
+                <th scope="col">Mobile</th>
+                <th scope="col">Confirm</th>
+                <th scope="col">Decline</th>
+            </tr>
         </thead>
         <tbody>
-        {%for agent in agents%}
+            {%for agent in agents%}
             <form method="post" action="#">
                 {% csrf_token %}
                 <tr>
-                <td>{{agent.ID}}</td>
-                <td>{{agent.username}}</td>
-                <td>{{agent.full_name}}</td>
-                <td>{{agent.email}}</td>
-                <td>{{agent.city}}</td>
-                <td>{{agent.Mobile}}</td>
-                <form action=''  method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <td>
-                      <button type="submit" style="background-color:greenyellow" class="confirm" name="confirm" id="confirm" value="{{agent.ID}}">Confirm</button>
-                    </td>
-                </form>
-                <!--<input hidden=True name="confirm" value="{{agent.ID}}">-->
-                <!--<input hidden=True name="decline" value="{{agent.ID}}">-->
-                <form action=''  method="post" enctype="multipart/form-data">
-                  {% csrf_token %}
-                    <td>
-                      <button type="submit" style="background-color:red" class="decline" name="decline" id="decline" value="{{agent.ID}}" >Decline</button>
-                    </td>
-                </form>
-              </tr>
+                    <td>{{agent.ID}}</td>
+                    <td>{{agent.username}}</td>
+                    <td>{{agent.full_name}}</td>
+                    <td>{{agent.email}}</td>
+                    <td>{{agent.city}}</td>
+                    <td>{{agent.Mobile}}</td>
+                    <form action='' method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <td>
+                            <button type="submit" style="background-color:greenyellow" class="confirm" name="confirm" id="confirm" value="{{agent.ID}}">Confirm</button>
+                        </td>
+                    </form>
+                    <!--<input hidden=True name="confirm" value="{{agent.ID}}">-->
+                    <!--<input hidden=True name="decline" value="{{agent.ID}}">-->
+                    <form action='' method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <td>
+                            <button type="submit" style="background-color:red" class="decline" name="decline" id="decline" value="{{agent.ID}}">Decline</button>
+                        </td>
+                    </form>
+                </tr>
             </form>
-        {%endfor%}
+            {%endfor%}
         </tbody>
-      </table>
+    </table>
 </section>
 {% endblock %}
