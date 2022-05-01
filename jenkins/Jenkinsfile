@@ -25,7 +25,8 @@ pipeline {
                 withEnv(["HOME=${env.WORKSPACE}"]){
                     sh 'pip install django-test'
                     sh 'pip install django'
-                    sh 'python StockFlow/AgentSignUp/tests/test_AgentSignUp.py test'
+                    sh 'python StockFlow/manage.py shell'
+                    sh 'python StockFlow/manage.py test'
                 }
              }
         }
