@@ -1,7 +1,3 @@
-import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "StockFlow.settings")
-
-
 from django.test import TestCase, Client
 from accounts.models import User
 from django.urls import reverse
