@@ -1,5 +1,5 @@
-django-jenkins==0.110.0
 django==4.0.3
+django-jenkins==0.110.0
 django-test
 mysqlclient==2.1.0
 yfinance==0.1.70
