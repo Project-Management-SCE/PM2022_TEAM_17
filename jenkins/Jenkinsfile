@@ -23,6 +23,7 @@ pipeline {
             
              steps{
                 withEnv(["HOME=${env.WORKSPACE}"]){
+                    sh 'export DJANGO_SETTINGS_MODULE=StockFlow.settings'
                     sh 'pip install -r jenkins/requirements.txt'
                     sh 'python StockFlow/manage.py shell'
                     sh 'python StockFlow/AgentSignUp/tests/test_AgentSignUp.py shell'
