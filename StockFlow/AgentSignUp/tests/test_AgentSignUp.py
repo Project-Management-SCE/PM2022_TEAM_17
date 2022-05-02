@@ -1,4 +1,9 @@
-export DJANGO_SETTINGS_MODULE=StockFlow.settings
+import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "StockFlow.settings")
+
+import django
+django.setup()
+
 from django.test import TestCase, Client
 from accounts.models import User
 from django.urls import reverse
