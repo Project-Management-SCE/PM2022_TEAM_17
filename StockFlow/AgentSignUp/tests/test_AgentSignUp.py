@@ -1,3 +1,10 @@
+import django
+from django.conf import settings
+from StockFlow import settings.py
+
+settings.configure(default_settings=settings.py, DEBUG=True)
+django.setup()
+
 from django.test import TestCase, Client
 from accounts.models import User
 from django.urls import reverse
