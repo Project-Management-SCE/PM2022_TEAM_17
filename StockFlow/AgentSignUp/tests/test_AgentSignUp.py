@@ -1,8 +1,8 @@
 import django
-from django.conf import settings
+from django.conf import settings as ds
 from StockFlow import settings
 
-settings.configure(default_settings=settings.py, DEBUG=True)
+ds.configure(default_settings=settings.py, DEBUG=True)
 django.setup()
 
 from django.test import TestCase, Client
