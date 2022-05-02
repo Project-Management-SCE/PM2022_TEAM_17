@@ -86,6 +86,11 @@
                     <a class="nav-link" href="/agent_profile" id="navbarDropdownMenuLink"> Profile</a>
                 </li>
                 {% endif %}
+                <li class="nav-item dropdown">
+                    {% if request.user.is_authenticated and request.user.is_Customer and not is_Agent %}
+                    <a class="nav-link" href="/customer_buy" id="navbarDropdownMenuLink">Stocks</a>
+                </li>
+                {% endif %}
             </ul>
 
         </div>

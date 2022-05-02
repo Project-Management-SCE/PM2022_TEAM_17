@@ -1,7 +1,0 @@
-django-jenkins==0.110.0
-django==4.0.4
-django-test
-mysqlclient==2.1.0
-yfinance==0.1.70
-coverage==6.3.2
-pylint==2.13.7
