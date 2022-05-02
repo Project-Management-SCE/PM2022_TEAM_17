@@ -28,7 +28,7 @@ pipeline {
                     sh 'pip install mysqlclient'
                     sh 'pip install yfinance'
                     sh 'python StockFlow/manage.py shell'
-                    sh 'python StockFlow/AgentSignUp/tests/test_AgentSignUp.py test'
+                    sh 'python StockFlow/manage.py test'
                 }
              }
         }
