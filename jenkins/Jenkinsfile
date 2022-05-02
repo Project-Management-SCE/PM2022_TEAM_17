@@ -23,7 +23,6 @@ pipeline {
             
              steps{
                 withEnv(["HOME=${env.WORKSPACE}"]){
-                    sh 'settings.configure()'
                     sh 'pip install django-test'
                     sh 'pip install django'
                     sh 'pip install mysqlclient'
