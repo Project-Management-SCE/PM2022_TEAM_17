@@ -60,10 +60,6 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.run_pylint',
 )
 
-INSTALLED_APPS += ('django_jenkins',)
-
-PROJECT_APPS = ['AgentSignUp']
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
