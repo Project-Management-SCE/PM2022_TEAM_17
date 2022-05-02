@@ -1,6 +1,6 @@
 import django
 from django.conf import settings
-from StockFlow import settings.py
+from StockFlow import settings
 
 settings.configure(default_settings=settings.py, DEBUG=True)
 django.setup()
