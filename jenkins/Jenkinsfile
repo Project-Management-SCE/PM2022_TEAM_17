@@ -23,6 +23,7 @@ pipeline {
             
              steps{
                 withEnv(["HOME=${env.WORKSPACE}"]){  
+                    sh 'cd StockFlow'
                     sh 'python StockFlow/manage.py test'
                 }
              }
