@@ -25,7 +25,6 @@ pipeline {
                 withEnv(["HOME=${env.WORKSPACE}"]){  
                     sh 'pip install django_jenkins'
                     sh 'python StockFlow/manage.py test'
-                    sh 'python StockFlow/manage.py jenkins'
                 }
              }
         }
