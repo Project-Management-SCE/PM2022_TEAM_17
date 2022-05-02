@@ -27,6 +27,7 @@ pipeline {
                     sh 'pip install django'
                     sh 'pip install mysqlclient'
                     sh 'pip install yfinance'
+                    sh 'python StockFlow shell'
                     sh 'python StockFlow/manage.py shell'
                     sh 'python StockFlow/AgentSignUp/tests/test_AgentSignUp.py test'
                 }
