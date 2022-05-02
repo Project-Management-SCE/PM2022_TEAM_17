@@ -23,11 +23,9 @@ pipeline {
             
              steps{
                 withEnv(["HOME=${env.WORKSPACE}"]){
-                    sh 'pip install django-test'
-                    sh 'pip install django'
-                    sh 'pip install mysqlclient'
-                    sh 'pip install yfinance'
+                    sh 'pip install -r requirements.txt'
                     sh 'python StockFlow/manage.py shell'
+                    sh 'python StockFlow/AgentSignUp/tests/test_AgentSignUp.py shell'
                     sh 'python StockFlow/manage.py test'
                 }
              }
