@@ -101,10 +101,10 @@ WSGI_APPLICATION = 'StockFlow.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'djangodatabase',
-        'USER': 'dbadmin',
-        'PASSWORD': '12345',
-        'HOST': 'localhost',
+        'NAME': 'sql11489507',
+        'USER': 'sql11489507',
+        'PASSWORD': 'auxESNGcdq',
+        'HOST': 'sql11.freemysqlhosting.net',
         'PORT': '3306',
     }
 }
