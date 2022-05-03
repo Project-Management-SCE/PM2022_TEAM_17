@@ -1,7 +1,7 @@
-<form method="post" action="search_stock" class="form-inline container d-flex justify-content-center">
+<form method="POST" action="search_stock" class="form-inline container d-flex justify-content-center">
     {% csrf_token %}
     <input type="text" name="searchStock" id="form3Example3" required=True class="form-control mr-sm-3 form-control-lg" placeholder="Enter Stock Ticker, ex. (MSFT)" />
-    <input type="submit" value="Find Stock" class="btn btn-outline-success my-2 my-sm-0">
+    <button type="submit" value="Find Stock" class="btn btn-outline-success my-2 my-sm-0">Find Stock</button>
 </form>
 {% if messages %} {% for message in messages %} {% if message.tags == 'error' %}
 <div class="d-flex justify-content-center">

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'AgentSignUp.apps.AgentsignupConfig',
     'accounts',
     'django_jenkins',
+    'stocks',
 ]
 
 JENKINS_TASKS = (
@@ -60,7 +61,7 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.with_coverage',
     'django_jenkins.tasks.run_pylint',
 )
-PROJECT_APPS = ['AgentSugnUp']
+PROJECT_APPS = ['AgentSignUp','accounts','stocks']
 
 
 MIDDLEWARE = [
@@ -119,9 +120,16 @@ DATABASES = {
          'USER':'stockflow',
          'PASSWORD':'123team17!',
          'HOST':'stockflow-db.database.windows.net',
+<<<<<<< HEAD
          'PORT':'1433',
          'OPTIONS':{
              'driver':'SQL Server Native Client 11.0',
+=======
+         'PORT':'',
+         'OPTIONS':{
+             'DRIVER':'SQL Server Native Client 11.0',
+             'dsn': 'djangodatabase',
+>>>>>>> ba5143b002da014362c3d46c83b6922107df9d0a
              'MARS_Connection':'True',
          }
      }
@@ -171,4 +179,3 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CRISPY_TEMPLATE_PACK = "bootstrap4"
