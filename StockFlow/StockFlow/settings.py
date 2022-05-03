@@ -120,16 +120,10 @@ DATABASES = {
          'USER':'stockflow',
          'PASSWORD':'123team17!',
          'HOST':'stockflow-db.database.windows.net',
-<<<<<<< HEAD
-         'PORT':'1433',
-         'OPTIONS':{
-             'driver':'SQL Server Native Client 11.0',
-=======
          'PORT':'',
          'OPTIONS':{
              'DRIVER':'SQL Server Native Client 11.0',
              'dsn': 'djangodatabase',
->>>>>>> ba5143b002da014362c3d46c83b6922107df9d0a
              'MARS_Connection':'True',
          }
      }
