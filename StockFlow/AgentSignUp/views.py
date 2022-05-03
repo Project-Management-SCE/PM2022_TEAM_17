@@ -24,10 +24,11 @@ import yfinance as yf
 
 @login_required
 def Customer_Purchase(request):
-    tickers = ['AAPL', 'MSFT', 'AMD', 'SPY', 'LYFT', 'SOS', 'ATVI', 'RDBX', '^TNX', 'BRK-B', 'FRGE']
+    tickers = ['AAPL', 'MSFT', 'AMD', 'SPY', 'LYFT', 'SOS', 'ATVI', 'RDBX', '^TNX', 'BRK-B', 'FRGE'][0:3]
     stocks = {}
     for s in tickers:
-        stocks[s] = {'name': yf.Ticker(s).info['shortName'], 'price':yf.Ticker(s).info['regularMarketPrice']}
+        tickerInfo = yf.Ticker(s).info
+        stocks[s] = {'name': tickerInfo['shortName'], 'price':tickerInfo['regularMarketPrice']}
     return render(request,"CustomerStockBuy/customer_buy.html",{'stocks': stocks})
 
 
