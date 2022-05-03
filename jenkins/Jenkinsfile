@@ -22,11 +22,12 @@ pipeline {
             } 
             
              steps{
-                withEnv(["HOME=${env.WORKSPACE}"]){
-                    sh 'pip install django-test'
-                    sh 'pip install django'
-                    sh 'python StockFlow/manage.py shell'
-                    sh 'python StockFlow/manage.py test'
+                withEnv(["HOME=${env.WORKSPACE}"]){  
+                     dir('StockFlow'){
+                        sh 'python -m coverage run --source="." manage.py test'
+                        sh 'python -m coverage report'
+                        sh 'python manage.py check'
+                }
                 }
              }
         }

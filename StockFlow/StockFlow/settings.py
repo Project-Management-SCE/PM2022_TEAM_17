@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'AgentSignUp.apps.AgentsignupConfig',
     'accounts',
+    'django_jenkins',
 ]
 
 JENKINS_TASKS = (
@@ -55,8 +56,12 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.run_pyflakes',
     'django_jenkins.tasks.run_jslint',
     'django_jenkins.tasks.run_csslint',
-    'django_jenkins.tasks.run_sloccount'
+    'django_jenkins.tasks.run_sloccount',
+    'django_jenkins.tasks.with_coverage',
+    'django_jenkins.tasks.run_pylint',
 )
+PROJECT_APPS = ['AgentSugnUp']
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -100,12 +105,8 @@ WSGI_APPLICATION = 'StockFlow.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'djangodatabase',
-        'USER': 'dbadmin',
-        'PASSWORD': '12345',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 

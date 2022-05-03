@@ -1,5 +1,5 @@
    
-from asyncio.windows_events import NULL
+import time
 from email import message
 from re import A
 
@@ -7,6 +7,7 @@ from typing import List
 from django.forms import PasswordInput
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from requests import request
 
 from accounts.models import WAIT
 #from requests import request
@@ -21,23 +22,29 @@ from django.conf import settings
 
 import yfinance as yf
 
+@login_required
+def Customer_Purchase(request):
+    tickers = ['AAPL', 'MSFT', 'AMD', 'SPY', 'LYFT', 'SOS', 'ATVI', 'RDBX', '^TNX', 'BRK-B', 'FRGE'][0:3]
+    stocks = {}
+    for s in tickers:
+        tickerInfo = yf.Ticker(s).info
+        stocks[s] = {'name': tickerInfo['shortName'], 'price':tickerInfo['regularMarketPrice']}
+    return render(request,"CustomerStockBuy/customer_buy.html",{'stocks': stocks})
 
 
 def SearchStock(response):
-
     if response.method == "POST":
-        searchStock = response.POST.get('searchStock')
-        stock = yf.Ticker(searchStock)
-        price = stock.info['regularMarketPrice']
-        symbol = stock.info['symbol']
-        recom = stock.info['recommendationKey']
-        website = stock.info['website']
-        return render(response, "stock_view.html", {"price": price, "ticker": symbol, "recom": recom, "website": website})
-        # if stock.info['regularMarketPrice']:
-        #     return render(response, "AgentSignUp/signup_page.html", {"stock":stock})
-
-        # else:
-        #return HttpResponse("<h1>No " + searchStock +  " ticker exist<h1>")
+        try:
+            searchStock = response.POST.get('searchStock')
+            stock = yf.Ticker(searchStock)
+            price = stock.info['regularMarketPrice']
+            symbol = stock.info['symbol']
+            recom = stock.info['recommendationKey']
+            website = stock.info['website']
+            return render(response, "stock_view.html", {"price": price, "ticker": symbol, "recom": recom, "website": website})
+        except:
+            messages.error(response, f"Stock named {searchStock} doesn't found or not exists")
+            return render(response, "CustomerHomePage/customer_homepage.html", {})
 
 
 def CustomerSignIn(response):
@@ -59,7 +66,6 @@ def CustomerSignIn(response):
             return redirect('/customer_homepage')
             #return render(response, "AgentSignUp/home.html", {})
     else:
-        
         return render(response, "CustomerSignUp/signin_page.html", {})
 
 def CustomerSignUp(response):
@@ -318,3 +324,4 @@ def Agent_Profile(request):
         return render(request, "Agent_Profile/agent_profilepage.html", {"customers":customers})
     else:
         return redirect('/home')
+
