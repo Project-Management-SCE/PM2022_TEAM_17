@@ -1,11 +1,17 @@
-{% extends "base.html" %} {% block title %} Stock Info {% endblock %} {% block content %}
+{% extends "base.html" %} {% block title %} {{ticker}} Stock Info {% endblock %} {% block content %}
 
 
-<section class="vh-100">
-    <h1>Ticker: {{ticker}}</h1>
-    <h1>Price: {{price}}</h1>
-    <h1>Recommendation: {{recom}}</h1>
-    <h1>Website: <a href="{{website}}" target="_blank">{{website}}</a></h1>
-</section>
+<div class="vh-100">
+    <div class="card mx-auto mt-5" style="width: 24rem;">
+        <div class="card-body">
+            <h5 class="card-title">{{ticker}}</h5>
+            <p class="card-text">Price: {{price}} </p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Recommendation: {{recom}}</li>
+            <li class="list-group-item">Website: <a href="{{website}}" target="_blank">{{website}}</a></li>
+        </ul>
+    </div>
+</div>
 
 {% endblock %}
