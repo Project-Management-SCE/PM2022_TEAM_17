@@ -1,0 +1,108 @@
+{% extends "base.html" %} {% block title %} Customer Homepage {% endblock %} {% block content %}
+
+<head>
+    <style type="text/css">
+        tr>* {
+            font-size: 15px;
+            font-style: bold;
+        }
+    </style>
+</head>
+<div class="vh-100">
+    <div class="d-flex align-items-center flex-column bd-highlight">
+        <div style="margin-top:10rem;width:100%;">
+            <div class="container mb-1">
+                <nav class=" navbar navbar-dark bg-dark d-flex justify-content-center">
+                    <span class="navbar-brand display-4 ">Stock Purchase Requests</span>
+                </nav>
+            </div>
+            <table class="table table-sm table-striped " style="margin-bottom:20rem; " name="StocksPurchases ">
+                <thead class="thead-dark ">
+                    <tr>
+                        <th scope="col ">ID</th>
+                        <th scope="col ">Symbol</th>
+                        <th scope="col ">Amount</th>
+                        <th scope="col ">isBuy</th>
+                        <th scope="col ">Confirm</th>
+                        <th scope="col ">Decline</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for deal in Deals%}
+                    <form method="post " action="# ">
+                        {% csrf_token %}
+                        <tr>
+                            <td>{{deal.custID.ID}}</td>
+                            <td>{{deal.stock}}</td>
+                            <td>{{deal.amount}}</td>
+                            <td>{{deal.isBuy}}</td>
+
+                            <form action='' method="post" enctype="multipart/form-data ">
+                                {% csrf_token %}
+                                <td>
+                                    <button type="submit" class="confirm btn btn-success shadow-4" name="confirm " id="confirm " value="{{customer.ID}} ">Confirm</button>
+                                </td>
+                            </form>
+                            <!--<input hidden=True name="confirm " value="{{customer.ID}} ">-->
+                            <!--<input hidden=True name="decline " value="{{customer.ID}} ">-->
+                            <form action='' method="post" enctype="multipart/form-data ">
+                                {% csrf_token %}
+                                <td>
+                                    <button type="submit" class="decline btn btn-danger btn-rounded shadow-4" name="decline " id="decline " value="{{customer.ID}} ">Decline</button>
+                                </td>
+                            </form>
+                        </tr>
+                    </form>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="container mb-1">
+            <nav class=" navbar navbar-dark bg-dark d-flex justify-content-center">
+                <span class="navbar-brand display-4">Stock Selling Requests</span>
+            </nav>
+        </div>
+        <table class="table table-sm table-striped " name="StocksSelling ">
+            <thead class="thead-dark ">
+                <tr>
+                    <th scope="col ">ID</th>
+                    <th scope="col ">Symbol</th>
+                    <th scope="col ">Amount</th>
+                    <th scope="col ">isSell</th>
+                    <th scope="col ">Confirm</th>
+                    <th scope="col ">Decline</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for deal in Deals%}
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <tr>
+                        <td>{{deal.custID.ID}}</td>
+                        <td>{{deal.stock}}</td>
+                        <td>{{deal.amount}}</td>
+                        <td>{{deal.isSell}}</td>
+
+                        <form action='' method="post " enctype="multipart/form-data ">
+                            {% csrf_token %}
+                            <td>
+                                <button type="submit " class="confirm btn btn-success shadow-4 " name="confirm" value="{{customer.ID}}">Confirm</button>
+                            </td>
+                        </form>
+                        <!--<input hidden=True name="confirm " value="{{customer.ID}} ">-->
+                        <!--<input hidden=True name="decline " value="{{customer.ID}} ">-->
+                        <form action='' method="post " enctype="multipart/form-data ">
+                            {% csrf_token %}
+                            <td>
+                                <button type="submit" class="decline btn btn-danger btn-rounded shadow-4" name="decline" value="{{customer.ID}}">Decline</button>
+                            </td>
+                        </form>
+                    </tr>
+                </form>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+{% endblock %}
