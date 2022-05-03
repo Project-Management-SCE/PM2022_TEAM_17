@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'AgentSignUp.apps.AgentsignupConfig',
     'accounts',
     'django_jenkins',
+    'stocks',
 ]
 
 JENKINS_TASKS = (
@@ -60,7 +61,7 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.with_coverage',
     'django_jenkins.tasks.run_pylint',
 )
-PROJECT_APPS = ['AgentSugnUp']
+PROJECT_APPS = ['AgentSignUp','accounts','stocks']
 
 
 MIDDLEWARE = [
@@ -104,11 +105,21 @@ WSGI_APPLICATION = 'StockFlow.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+     'default': {
+         'tcp':'stockflow-db.database.windows.net',
+         'ENGINE':'sql_server.pyodbc',
+         'NAME':'djangodatabase',
+         'USER':'stockflow',
+         'PASSWORD':'123team17!',
+         'HOST':'stockflow-db.database.windows.net',
+         'PORT':'',
+         'OPTIONS':{
+             'DRIVER':'SQL Server Native Client 11.0',
+             'dsn': 'djangodatabase',
+             'MARS_Connection':'True',
+         }
+     }
+ }
 
 
 # Password validation
@@ -154,4 +165,3 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CRISPY_TEMPLATE_PACK = "bootstrap4"
