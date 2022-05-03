@@ -103,12 +103,29 @@ WSGI_APPLICATION = 'StockFlow.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+     'default': {
+         'tcp':'stockflow-db.database.windows.net',
+         'ENGINE':'sql_server.pyodbc',
+         'NAME':'djangodatabase',
+         'USER':'stockflow',
+         'PASSWORD':'123team17!',
+         'HOST':'stockflow-db.database.windows.net',
+         'PORT':'1433',
+         'OPTIONS':{
+             'driver':'SQL Server Native Client 11.0',
+             'MARS_Connection':'True',
+         }
+     }
+ }
 
 
 # Password validation
