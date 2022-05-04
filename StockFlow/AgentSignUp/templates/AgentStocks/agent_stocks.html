@@ -28,7 +28,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {%for deal in Deals%}
+                    {%for deal in Deals%} {% if deal.isBuy %}
                     <form method="post " action="# ">
                         {% csrf_token %}
                         <tr>
@@ -53,7 +53,7 @@
                             </form>
                         </tr>
                     </form>
-                    {% endfor %}
+                    {% endif %} {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -74,7 +74,7 @@
                 </tr>
             </thead>
             <tbody>
-                {%for deal in Deals%}
+                {%for deal in Deals%} {% if deal.isSell %}
                 <form method="post" action="">
                     {% csrf_token %}
                     <tr>
@@ -99,7 +99,7 @@
                         </form>
                     </tr>
                 </form>
-                {% endfor %}
+                {% endif %} {% endfor %}
             </tbody>
         </table>
 

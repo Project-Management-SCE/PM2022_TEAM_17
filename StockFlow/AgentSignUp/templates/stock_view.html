@@ -5,9 +5,9 @@
     <div class="card mx-auto mt-5" style="width: 24rem;">
         <form method="POST" action="buy_stock">
             <div class="card-body">
-                <h5 class="card-title" name="stockName">{{ticker}}</h5>
+                <h5 class="card-title">{{ticker}}</h5>
                 <input type="text" hidden name="stockName" value={{ticker}}>{{ticker}}</input>
-                <p class="card-text" name="stockPrice">Price: {{price}}$ </p>
+                <p class="card-text">Price: {{price}}$ </p>
                 <input type="text" hidden name="stockPrice" value={{price}}>{{ticker}}</input>
             </div>
             <ul class="list-group list-group-flush">

@@ -7,6 +7,7 @@ from typing import List
 from django.forms import PasswordInput
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from matplotlib.pyplot import get
 from requests import request
 
 from accounts.models import WAIT
@@ -15,6 +16,7 @@ from .forms import CreateNewAgent
 from django.contrib import messages
 # Create your views here.
 from accounts.models import User
+from stocks.models import StockDeal
 from django.contrib.auth import authenticate, login ,logout
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
@@ -23,14 +25,31 @@ from django.conf import settings
 import yfinance as yf
 
 @login_required
-def Customer_Purchase(request):
-    tickers = ['AAPL', 'MSFT', 'AMD', 'SPY', 'LYFT', 'SOS', 'ATVI', 'RDBX', '^TNX', 'BRK-B', 'FRGE'][0:3]
-    stocks = {}
-    for s in tickers:
-        tickerInfo = yf.Ticker(s).info
-        stocks[s] = {'name': tickerInfo['shortName'], 'price':tickerInfo['regularMarketPrice']}
-    return render(request,"CustomerStockBuy/customer_buy.html",{'stocks': stocks})
+#def Customer_Purchase(request):
+#    tickers = ['AAPL', 'MSFT', 'AMD', 'SPY', 'LYFT', 'SOS', 'ATVI', 'RDBX', '^TNX', 'BRK-B', 'FRGE'][0:3]
+#    stocks = {}
+#    for s in tickers:
+#        tickerInfo = yf.Ticker(s).info
+#        stocks[s] = {'name': tickerInfo['shortName'], 'price':tickerInfo['regularMarketPrice']}
+#    return render(request,"CustomerStockBuy/customer_buy.html",{'stocks': stocks})
 
+@login_required
+def buyStock(request):
+    if request.method == "POST":
+        try:
+            stockName = request.POST.get('stockName')
+            stockAmount = request.POST.get('stockAmount')
+            userID = request.user
+            Deal = StockDeal(stock=stockName,custID=userID,isBuy=stockAmount)
+            if (StockDeal.objects.filter(custID=userID)):
+                customer = StockDeal.objects.filter(custID=userID)
+                Deal.amount = customer.amount
+                Deal.isSell = customer.isSell
+            Deal.save()
+            return render(request, "CustomerHomePage/customer_homepage.html", {})
+        except:
+            messages.error(request, f"Could not buy stock {request.POST.get('stockName')}")
+            return render(request, "CustomerHomePage/customer_homepage.html", {})
 
 def SearchStock(response):
     if response.method == "POST":
@@ -45,6 +64,8 @@ def SearchStock(response):
         except:
             messages.error(response, f"Stock named {searchStock} doesn't found or not exists")
             return render(response, "CustomerHomePage/customer_homepage.html", {})
+    
+        
 
 
 def CustomerSignIn(response):
@@ -325,3 +346,7 @@ def Agent_Profile(request):
     else:
         return redirect('/home')
 
+@login_required
+def Agent_StockDeal(request):
+    deals = StockDeal.objects.all()
+    return render(request, "AgentStocks/agent_stocks.html", {'Deals':deals})
