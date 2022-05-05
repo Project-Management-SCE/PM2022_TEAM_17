@@ -49,7 +49,7 @@
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#"><img src="https://flyclipart.com/thumb2/bullish-bullish-market-bullish-stock-icon-with-png-and-vector-166034.png" width=40 height=30> StockFlow</a>
+        <a class="navbar-brand" href="/home"><img src="https://flyclipart.com/thumb2/bullish-bullish-market-bullish-stock-icon-with-png-and-vector-166034.png" width=40 height=30> StockFlow</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -81,11 +81,15 @@
                     </div>
                 </li>
                 <li class="nav-item dropdown">
-                    {% elif request.user.is_authenticated and request.user.is_Customer and not is_Agent %}
+                    {% elif request.user.is_authenticated and request.user.is_Customer and not request.user.is_Agent %}
                     <a class="nav-link" href="/customer_profile" id="navbarDropdownMenuLink">Profile</a> {% elif request.user.is_authenticated and not request.user.is_Customer and not is_Agent %}
                     <a class="nav-link" href="/agent_profile" id="navbarDropdownMenuLink"> Profile</a>
                 </li>
                 {% endif %}
+                <li class="nav-item dropdown">
+                    {% if request.user.is_authenticated and not request.user.is_Customer and request.user.is_Agent %}
+                    <a class="nav-link" href="/agent_stock_deal" id="navbarDropdownMenuLink">Stock Deal Requests </a> {% endif %}
+                </li>
                 <!--<li class="nav-item dropdown">
                     {% if request.user.is_authenticated and request.user.is_Customer and not is_Agent %}
                     <a class="nav-link" href="/customer_buy" id="navbarDropdownMenuLink">Stocks</a>
