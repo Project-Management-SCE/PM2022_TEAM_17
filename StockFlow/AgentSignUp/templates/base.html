@@ -83,7 +83,7 @@
                 <li class="nav-item dropdown">
                     {% elif request.user.is_authenticated and request.user.is_Customer and not request.user.is_Agent %}
                     <a class="nav-link" href="/customer_profile" id="navbarDropdownMenuLink">Profile</a> {% elif request.user.is_authenticated and not request.user.is_Customer and not is_Agent %}
-                    <a class="nav-link" href="/agent_profile" id="navbarDropdownMenuLink"> Profile</a>
+                    <a class="nav-link" href="/agent_portfolio_requests" id="navbarDropdownMenuLink"> Customers Portfolio Requests</a>
                 </li>
                 {% endif %}
                 <li class="nav-item dropdown">
