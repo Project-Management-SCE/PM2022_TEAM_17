@@ -339,10 +339,10 @@ def Customer_Profile(request):
 
 
 @login_required
-def Agent_Profile(request):
+def Agent_PortfolioRequests(request):
     if request.user.is_Agent and not  request.user.is_Customer:
         customers = User.objects.filter(isPortfolio="waiting").filter(is_Customer=True)
-        return render(request, "Agent_Profile/agent_profilepage.html", {"customers":customers})
+        return render(request, "AgentHomePage/agent_portfoliorequests.html", {"customers":customers})
     else:
         return redirect('/home')
 
