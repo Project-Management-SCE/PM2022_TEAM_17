@@ -342,9 +342,50 @@ def Customer_Profile(request):
 def Agent_PortfolioRequests(request):
     if request.user.is_Agent and not  request.user.is_Customer:
         customers = User.objects.filter(isPortfolio="waiting").filter(is_Customer=True)
+        if request.method == "POST":
+            if 'confirm' in request.POST:
+                portfolio_confirm(request)
+            if 'decline' in request.POST:
+                portfolio_decline(request)
         return render(request, "AgentHomePage/agent_portfoliorequests.html", {"customers":customers})
     else:
         return redirect('/home')
+
+def portfolio_decline(request):
+    customers = User.objects.filter(isPortfolio="waiting").filter(is_Customer=True)
+    if request.method == "POST":
+        custID=request.POST.get("decline")
+        if custID is not None:
+            agent=User.objects.get(ID=custID)        # #email
+            User.objects.filter(ID=custID).update(isPortfolio="None")
+            email=agent.email
+            send_mail(
+                'Your Request!',
+                'Hello,Your request from StockFlow.com for Portfolio was declined,You can try again.Have A nice day:)',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+    return render(request, "AgentHomePage/agent_portfoliorequests.html", {"customers":customers})
+
+
+def portfolio_confirm(request):
+    customers = User.objects.filter(isPortfolio="waiting").filter(is_Customer=True)
+    if request.method == "POST":
+        customerID=request.POST.get("confirm")
+        if customerID is not None:
+            User.objects.filter(ID=customerID).update(isPortfolio="confirmed")
+            cust=User.objects.get(ID=customerID)        #email
+            email=cust.email
+            send_mail(
+                'Your Request For Portfolio!',
+                'Hello,Your request from StockFlow.com for Portfolio was confirmed,please enter the site to see the changes.Have A nice day:)',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+        return render(request, "AgentHomePage/agent_portfoliorequests.html", {"customers":customers})
+    return redirect('/home')
 
 @login_required
 def Agent_StockDeal(request):
