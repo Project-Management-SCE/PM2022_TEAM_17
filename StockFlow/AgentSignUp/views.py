@@ -15,7 +15,7 @@ from accounts.models import WAIT
 from .forms import CreateNewAgent
 from django.contrib import messages
 # Create your views here.
-from accounts.models import User
+from accounts.models import User,Portfolios
 from stocks.models import StockDeal
 from django.contrib.auth import authenticate, login ,logout
 from django.contrib.auth.decorators import login_required
@@ -131,14 +131,20 @@ def AgentSignIn(response):
             messages.error(response, "one or more of the credentials are incorrect!")
             return render(response, "AgentSignUp/signin_page.html", {})
         if agent is not None:
-            login(response, agent)
-            messages.success(response, "Sign in successfully!")
-            agent.is_active = True
-            agent.save()
+            if agent.isConfirmedAgent:
+                login(response, agent)
+                messages.success(response, "Sign in successfully!")
+                agent.is_active = True
+                agent.save()
+                return redirect("/agent_homepage")
+            else:
+                messages.error(response, "Your account is not approved yet!")
+                return render(response, "AgentSignUp/signin_page.html", {})
+
             #return render(response, "AgentHomePage/agent_homepage.html", {})  
             #return AgentHomePage(response)
             #return render(response, "AgentHomePage/agent_homepage.html", {})
-            return redirect("/agent_homepage")
+            
             #return HttpResponse("<h1>No ticker exist<h1>")
 
 
@@ -250,9 +256,10 @@ def AgentHomePage(request):
     # if admin.is_Admin ==True:
     username=request.user.username
     is_Agent=request.user.is_Agent
+    isConfirmedAgent=request.user.isConfirmedAgent
     #User.objects.get()
     if is_Agent:
-        return render(request, "AgentHomePage/agent_homepage.html", {"username":username})
+        return render(request, "AgentHomePage/agent_homepage.html", {"username":username,"isConfirmedAgent":isConfirmedAgent})
     return redirect("/home") 
     # return redirect("/home")
 
@@ -342,9 +349,10 @@ def Customer_Profile(request):
 def Agent_PortfolioRequests(request):
     if request.user.is_Agent and not  request.user.is_Customer:
         customers = User.objects.filter(isPortfolio="waiting").filter(is_Customer=True)
+        agentID=request.user.ID
         if request.method == "POST":
             if 'confirm' in request.POST:
-                portfolio_confirm(request)
+                portfolio_confirm(request,agentID)
             if 'decline' in request.POST:
                 portfolio_decline(request)
         return render(request, "AgentHomePage/agent_portfoliorequests.html", {"customers":customers})
@@ -369,7 +377,7 @@ def portfolio_decline(request):
     return render(request, "AgentHomePage/agent_portfoliorequests.html", {"customers":customers})
 
 
-def portfolio_confirm(request):
+def portfolio_confirm(request,agentID):
     customers = User.objects.filter(isPortfolio="waiting").filter(is_Customer=True)
     if request.method == "POST":
         customerID=request.POST.get("confirm")
@@ -384,6 +392,8 @@ def portfolio_confirm(request):
                 [email],
                 fail_silently=False,
             )
+            p=Portfolios(agentID=agentID,customerID=customerID)
+            p.save()
         return render(request, "AgentHomePage/agent_portfoliorequests.html", {"customers":customers})
     return redirect('/home')
 
