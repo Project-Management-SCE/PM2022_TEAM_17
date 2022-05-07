@@ -162,3 +162,7 @@ class User(AbstractBaseUser):
     def is_admin(self):
         "Is the user a admin member?"
         return self.is_Admin
+
+class Portfolios(models.Model):
+    agentID=models.IntegerField()
+    customerID=models.IntegerField(primary_key=True)
