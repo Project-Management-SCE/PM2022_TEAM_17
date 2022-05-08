@@ -24,6 +24,7 @@ pipeline {
              steps{
                 withEnv(["HOME=${env.WORKSPACE}"]){  
                      dir('StockFlow'){
+                        sh 'apt install unixodbc-dev'
                         sh 'pip install pyodbc'
                         sh 'python -m coverage run --source="." manage.py test'
                         sh 'python -m coverage report'
