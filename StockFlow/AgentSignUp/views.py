@@ -42,7 +42,7 @@ def buyStock(request):
             stockName = request.POST.get('stockName')
             stockAmount = request.POST.get('stockAmount')
             userID = request.user
-            if (StockDeal.objects.filter(custID=userID) and StockDeal.objects.filter(stock=stockName)):
+            if (StockDeal.objects.filter(custID=userID).filter(stock=stockName)):
                 Deal = StockDeal.objects.filter(custID=userID).filter(stock=stockName)
                 Deal.isBuy += stockAmount
             else:       
@@ -58,6 +58,7 @@ def SearchStock(response):
         try:
             stockTicker = response.POST.get('searchStock')
             stockData = yf.download(tickers=stockTicker,start="2022-01-01",end="2022-05-01", interval="5d", rounding=True)
+            print(stockData.__dict__)
             graph = go.Figure()
             graph.add_trace(go.Candlestick())
             graph.add_trace(go.Candlestick(x=stockData.index,open = stockData['Open'], high=stockData['High'], low=stockData['Low'], close=stockData['Close'], name = 'market data'))
