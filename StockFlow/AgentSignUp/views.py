@@ -23,7 +23,9 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 import yfinance as yf
-from plotly import graph_objs as go
+import matplotlib.pyplot as plt
+import io
+import urllib, base64
 
 
 @login_required
@@ -57,18 +59,21 @@ def SearchStock(response):
     if response.method == "POST":
         try:
             stockTicker = response.POST.get('searchStock')
-            stockData = yf.download(tickers=stockTicker,start="2022-01-01",end="2022-05-01", interval="5d", rounding=True)
-            print(stockData.__dict__)
-            graph = go.Figure()
-            graph.add_trace(go.Candlestick())
-            graph.add_trace(go.Candlestick(x=stockData.index,open = stockData['Open'], high=stockData['High'], low=stockData['Low'], close=stockData['Close'], name = 'market data'))
-            graph.update_layout(title = f"{yf.Ticker(stockTicker).info['shortName']} share price", yaxis_title='Stock Price (USD)')
             stock = yf.Ticker(stockTicker)
+            stockData = stock.history(period="4y")
+            stockData['Close'].plot(title=f"{stockTicker} stock price (in USD)")
+            graph = plt.gcf()
+            buf = io.BytesIO()
+            graph.savefig(buf,format='png')
+            buf.seek(0)
+            string = base64.b64encode(buf.read())
+            uri = urllib.parse.quote(string)
+            graph = stockData['Close']
             price = stock.info['regularMarketPrice']
             symbol = stock.info['symbol']
             recom = stock.info['recommendationKey']
             website = stock.info['website']
-            return render(response, "stock_view.html", {"price": price, "ticker": symbol, "recom": recom, "website": website, "graph": graph})
+            return render(response, "stock_view.html", {"price": price, "ticker": symbol, "recom": recom, "website": website, "graph": uri})
         except:
             messages.error(response, f"Stock named {stockTicker} doesn't found or not exists")
             if response.user.is_Customer:

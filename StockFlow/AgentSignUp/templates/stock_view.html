@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-6 col-md-4">
                 <div class="card mx-auto mt-5" style="width: 24rem;">
-                    <form method="GET" action="buy_stock">
+                    <form method="POST" action="buy_stock">
                         <div class="card-body">
                             <h5 class="card-title">{{ticker}}</h5>
                             <input type="text" hidden name="stockName" value={{ticker}}>{{ticker}}</input>
@@ -37,16 +37,13 @@
                     </ul>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12 col-md-8">
-                {% if graph %}
-                <div style="width:600;height:500">
-                    {{ graph | safe}}
-                </div>
-                {% endif %}
+            {% if graph %}
+            <div style="width:800;height:500">
+                <img src="data:image/png;base64,{{graph}}" alt="">
             </div>
+            {% endif %}
         </div>
+
     </div>
 </div>
 
