@@ -20,11 +20,13 @@ urlpatterns = [
     path("logout", views.Logout, name="logout"),
     path("admin_agentrequestslist/", views.AgentRequestsList, name="admin_agentrequestslist"),
 
-    path("admin_homepage/search_stock", views.SearchStock, name="Search_Stock"),
-    path("agent_homepage/search_stock", views.SearchStock, name="Search_Stock"),
-    path("customer_homepage/search_stock", views.SearchStock, name="Search_Stock"),
+    path("admin_homepage/search_stock", views.SearchStock, name="Search_Stock1"),
+    path("agent_homepage/search_stock", views.SearchStock, name="Search_Stock2"),
+    path("customer_homepage/search_stock", views.SearchStock, name="Search_Stock3"),
+    path("customer_homepage/buy_stock", views.buyStock, name="Buy_Stock"),
     path("customer_profile", views.Customer_Profile, name="Customer Profile"),
-    path("agent_profile", views.Agent_Profile, name="Agent Profile"),
-    path("customer_buy", views.Customer_Purchase, name="Customer Stock Buy"),
+    path("agent_portfolio_requests", views.Agent_PortfolioRequests, name="Agent Profile"),
+    path("agent_stock_deal", views.Agent_StockDeal, name="Agent Stock Deals"),
+    #path("customer_buy", views.Customer_Purchase, name="Customer Stock Buy"),
 
 ]

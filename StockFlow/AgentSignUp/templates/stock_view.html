@@ -2,36 +2,42 @@
 
 
 <div class="vh-100">
-    <div class="card mx-auto mt-5" style="width: 24rem;">
-        <form method="POST" action="buy_stock">
-            <div class="card-body">
-                <h5 class="card-title" name="stockName">{{ticker}}</h5>
-                <input type="text" hidden name="stockName" value={{ticker}}>{{ticker}}</input>
-                <p class="card-text" name="stockPrice">Price: {{price}}$ </p>
-                <input type="text" hidden name="stockPrice" value={{price}}>{{ticker}}</input>
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Recommendation: {{recom}}</li>
-                <li class="list-group-item">Website: <a href="{{website}}" target="_blank">{{website}}</a></li>
-                <div class="d-flex justify-content-center">
-
-                    {% csrf_token %}
-                    <li class="list-group-item ">
-                        <button type="sumbit" class="btn-info buy p-2 bd-highlight" style="width:5rem;">Buy</button>
-                        <div class="form-group p-2 bd-highlight">
-                            <select class="form-control" name="stockAmount">
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
-                        </select>
+    <div class="container">
+        <div class="row">
+            <div class="col-6 col-md-4">
+                <div class="card mx-auto mt-5" style="width: 24rem;">
+                    <form method="POST" action="buy_stock">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ticker}}</h5>
+                            <input type="text" hidden name="stockName" value={{ticker}}>{{ticker}}</input>
+                            <p class="card-text">Price: {{price}}$ </p>
+                            <input type="text" hidden name="stockPrice" value={{price}}>{{ticker}}</input>
                         </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Recommendation: {{recom}}</li>
+                            <li class="list-group-item">Website: <a href="{{website}}" target="_blank">{{website}}</a></li>
+                            <div class="d-flex justify-content-center">
+                                {% csrf_token %} {% if request.user.is_Customer %}
+                                <li class="list-group-item ">
+                                    <button type="sumbit" class="btn-info buy p-2 bd-highlight" style="width:5rem;">Buy</button>
+                                    <div class="form-group p-2 bd-highlight">
+                                        <input type="number" name="stockAmount" min="1" max="15">
+                                    </div>
 
-                    </li>
-        </form>
+                                </li>
+                                {% endif %}
+                    </form>
+                    </div>
+                    </ul>
+                </div>
+            </div>
+            {% if graph %}
+            <div style="width:800;height:500">
+                <img src="data:image/png;base64,{{graph}}" alt="">
+            </div>
+            {% endif %}
         </div>
-        </ul>
+
     </div>
 </div>
 

@@ -7,6 +7,7 @@ from typing import List
 from django.forms import PasswordInput
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from matplotlib.pyplot import get
 from requests import request
 
 from accounts.models import WAIT
@@ -14,37 +15,84 @@ from accounts.models import WAIT
 from .forms import CreateNewAgent
 from django.contrib import messages
 # Create your views here.
-from accounts.models import User
+from accounts.models import User,Portfolios
+from stocks.models import StockDeal
 from django.contrib.auth import authenticate, login ,logout
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
 
 import yfinance as yf
+import matplotlib.pyplot as plt
+import io
+import urllib, base64
+
 
 @login_required
-def Customer_Purchase(request):
-    tickers = ['AAPL', 'MSFT', 'AMD', 'SPY', 'LYFT', 'SOS', 'ATVI', 'RDBX', '^TNX', 'BRK-B', 'FRGE'][0:3]
-    stocks = {}
-    for s in tickers:
-        tickerInfo = yf.Ticker(s).info
-        stocks[s] = {'name': tickerInfo['shortName'], 'price':tickerInfo['regularMarketPrice']}
-    return render(request,"CustomerStockBuy/customer_buy.html",{'stocks': stocks})
+#def Customer_Purchase(request):
+#    tickers = ['AAPL', 'MSFT', 'AMD', 'SPY', 'LYFT', 'SOS', 'ATVI', 'RDBX', '^TNX', 'BRK-B', 'FRGE'][0:3]
+#    stocks = {}
+#    for s in tickers:
+#        tickerInfo = yf.Ticker(s).info
+#        stocks[s] = {'name': tickerInfo['shortName'], 'price':tickerInfo['regularMarketPrice']}
+#    return render(request,"CustomerStockBuy/customer_buy.html",{'stocks': stocks})
 
+@login_required
+def buyStock(request):
+    if request.method == "POST":
+        try:
+            stockName = request.POST.get('stockName')
+            stockAmount = request.POST.get('stockAmount')
+            userID = request.user
+            
+            if (StockDeal.objects.filter(custID=userID).filter(stock=stockName)):
+                Deal = StockDeal.objects.get(custID=userID,stock=stockName)
+                Deal.isBuy = Deal.isBuy + int(stockAmount)
+            else:       
+                Deal = StockDeal(stock=stockName,custID=userID,isBuy=int(stockAmount))
+            Deal.save()
+            return render(request, "CustomerHomePage/customer_homepage.html", {})
+        except:
+            
+            messages.error(request, f"Could not buy stock {request.POST.get('stockName')}")
+            return render(request, "CustomerHomePage/customer_homepage.html", {})
 
 def SearchStock(response):
     if response.method == "POST":
         try:
-            searchStock = response.POST.get('searchStock')
-            stock = yf.Ticker(searchStock)
+            stockTicker = response.POST.get('searchStock')
+            stock = yf.Ticker(stockTicker)
+            stockData = stock.history(period="4y")
+            stockData['Close'].plot(title=f"{stockTicker} stock price (in USD)")
+            graph = plt.gcf()
+            buf = io.BytesIO()
+            graph.savefig(buf,format='png')
+            buf.seek(0)
+            string = base64.b64encode(buf.read())
+            uri = urllib.parse.quote(string)
+            graph = stockData['Close']
             price = stock.info['regularMarketPrice']
             symbol = stock.info['symbol']
             recom = stock.info['recommendationKey']
             website = stock.info['website']
-            return render(response, "stock_view.html", {"price": price, "ticker": symbol, "recom": recom, "website": website})
+            return render(response, "stock_view.html", {"price": price, "ticker": symbol, "recom": recom, "website": website, "graph": uri})
         except:
-            messages.error(response, f"Stock named {searchStock} doesn't found or not exists")
+            messages.error(response, f"Stock named {stockTicker} doesn't found or not exists")
+            if response.user.is_Customer:
+                return render(response, "CustomerHomePage/customer_homepage.html", {})
+            elif response.user.is_Agent:
+                return render(response, "AgentHomePage/agent_homepage.html", {})
+            elif response.user.is_Admin:
+                return render(response, "AdminHomePage/admin_homepage.html", {})
+    else:
+        if response.user.is_Customer:
             return render(response, "CustomerHomePage/customer_homepage.html", {})
+        elif response.user.is_Agent:
+            return render(response, "AgentHomePage/agent_homepage.html", {})
+        elif response.user.is_Admin:
+            return render(response, "AdminHomePage/admin_homepage.html", {})
+                
+        
 
 
 def CustomerSignIn(response):
@@ -110,14 +158,20 @@ def AgentSignIn(response):
             messages.error(response, "one or more of the credentials are incorrect!")
             return render(response, "AgentSignUp/signin_page.html", {})
         if agent is not None:
-            login(response, agent)
-            messages.success(response, "Sign in successfully!")
-            agent.is_active = True
-            agent.save()
+            if agent.isConfirmedAgent:
+                login(response, agent)
+                messages.success(response, "Sign in successfully!")
+                agent.is_active = True
+                agent.save()
+                return redirect("/agent_homepage")
+            else:
+                messages.error(response, "Your account is not approved yet!")
+                return render(response, "AgentSignUp/signin_page.html", {})
+
             #return render(response, "AgentHomePage/agent_homepage.html", {})  
             #return AgentHomePage(response)
             #return render(response, "AgentHomePage/agent_homepage.html", {})
-            return redirect("/agent_homepage")
+            
             #return HttpResponse("<h1>No ticker exist<h1>")
 
 
@@ -229,9 +283,10 @@ def AgentHomePage(request):
     # if admin.is_Admin ==True:
     username=request.user.username
     is_Agent=request.user.is_Agent
+    isConfirmedAgent=request.user.isConfirmedAgent
     #User.objects.get()
     if is_Agent:
-        return render(request, "AgentHomePage/agent_homepage.html", {"username":username})
+        return render(request, "AgentHomePage/agent_homepage.html", {"username":username,"isConfirmedAgent":isConfirmedAgent})
     return redirect("/home") 
     # return redirect("/home")
 
@@ -318,10 +373,110 @@ def Customer_Profile(request):
 
 
 @login_required
-def Agent_Profile(request):
+def Agent_PortfolioRequests(request):
     if request.user.is_Agent and not  request.user.is_Customer:
         customers = User.objects.filter(isPortfolio="waiting").filter(is_Customer=True)
-        return render(request, "Agent_Profile/agent_profilepage.html", {"customers":customers})
+        agentID=request.user.ID
+        if request.method == "POST":
+            if 'confirm' in request.POST:
+                portfolio_confirm(request,agentID)
+            if 'decline' in request.POST:
+                portfolio_decline(request)
+        return render(request, "AgentHomePage/agent_portfoliorequests.html", {"customers":customers})
     else:
         return redirect('/home')
 
+def portfolio_decline(request):
+    customers = User.objects.filter(isPortfolio="waiting").filter(is_Customer=True)
+    if request.method == "POST":
+        custID=request.POST.get("decline")
+        if custID is not None:
+            agent=User.objects.get(ID=custID)        # #email
+            User.objects.filter(ID=custID).update(isPortfolio="None")
+            email=agent.email
+            send_mail(
+                'Your Request!',
+                'Hello,Your request from StockFlow.com for Portfolio was declined,You can try again.Have A nice day:)',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+    return render(request, "AgentHomePage/agent_portfoliorequests.html", {"customers":customers})
+
+
+def portfolio_confirm(request,agentID):
+    customers = User.objects.filter(isPortfolio="waiting").filter(is_Customer=True)
+    if request.method == "POST":
+        customerID=request.POST.get("confirm")
+        if customerID is not None:
+            User.objects.filter(ID=customerID).update(isPortfolio="confirmed")
+            cust=User.objects.get(ID=customerID)        #email
+            email=cust.email
+            send_mail(
+                'Your Request For Portfolio!',
+                'Hello,Your request from StockFlow.com for Portfolio was confirmed,please enter the site to see the changes.Have A nice day:)',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+            p=Portfolios(agentID=agentID,customerID=customerID)
+            p.save()
+        return render(request, "AgentHomePage/agent_portfoliorequests.html", {"customers":customers})
+    return redirect('/home')
+
+@login_required
+def Agent_StockDeal(request):
+    deals = StockDeal.objects.all()
+    if request.method == "POST":
+        print("here!")
+        if 'confirm' in request.POST:
+            buying_stock_confirm(request)
+        if 'decline' in request.POST:
+            buying_stock_decline(request)
+    return render(request, "AgentStocks/agent_stocks.html", {'Deals':deals})
+
+
+def buying_stock_confirm(request):
+    deals = StockDeal.objects.all()
+    if request.method == "POST":
+        customerID=request.POST.get("confirm")
+        stockname=request.POST.get("stockname")
+        if customerID is not None:
+            stock=StockDeal.objects.get(custID=int(customerID),stock=stockname)
+            stock.amount=stock.amount+stock.isBuy
+            stock.isBuy=0
+            stock.save()
+            customer=User.objects.get(ID=customerID)        #email
+            email=customer.email
+            send_mail(
+                'Your Request!',
+                'Hello,Your request from StockFlow.com for Buying the stock '+stock.stock+' was confirmed,please enter the site to see the changes.Have A nice day:)',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+            return render(request, "AgentStocks/agent_stocks.html", {'Deals':deals})
+    #return render(request, "AdminHomePage/admin_agentrequestslist.html", {"agents":agents})
+    return redirect('/home')
+
+def buying_stock_decline(request):
+    deals = StockDeal.objects.all()
+    if request.method == "POST":
+        stockname=request.POST.get("stockname")
+        customerID=request.POST.get("decline")
+        if customerID is not None:
+            stock=StockDeal.objects.get(custID=int(customerID),stock=stockname)
+            stock.isBuy=0
+            stock.save()
+            customer=User.objects.get(ID=customerID)        #email
+            email=customer.email
+            send_mail(
+                'Your Request!',
+                'Hello,Your request from StockFlow.com for Buying the stock '+stock.stock+' was declined.Have A nice day:)',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+            if(stock.amount==0 and stock.isSell==0 ):
+                stock.delete()
+    return render(request, "AgentStocks/agent_stocks.html", {'Deals':deals})
