@@ -9,6 +9,15 @@ class StockDeal(models.Model):
     isBuy = models.IntegerField(default=0)
     amount = models.IntegerField(default=0)    
 
+    def getAmount(self):
+        return self.amount
+
+    def getIsBuy(self):
+        return self.isBuy
+
+    def getIsSell(self):
+        return self.isSell
+        
     def __str__(self):
         return f'{self.custID},{self.stock},{self.amount}' 
     

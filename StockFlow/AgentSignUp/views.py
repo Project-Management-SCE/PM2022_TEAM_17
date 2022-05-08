@@ -44,14 +44,15 @@ def buyStock(request):
             stockName = request.POST.get('stockName')
             stockAmount = request.POST.get('stockAmount')
             userID = request.user
-            if (StockDeal.objects.filter(custID=userID).filter(stock=stockName)):
-                Deal = StockDeal.objects.filter(custID=userID).filter(stock=stockName)
-                Deal.isBuy += stockAmount
+            if (StockDeal.objects.get(custID=userID, stock=stockName)):
+                Deal = StockDeal.objects.get(custID=userID,stock=stockName)
+                Deal.isBuy = Deal.isBuy + int(stockAmount)
             else:       
                 Deal = StockDeal(stock=stockName,custID=userID,isBuy=stockAmount)
             Deal.save()
             return render(request, "CustomerHomePage/customer_homepage.html", {})
         except:
+            
             messages.error(request, f"Could not buy stock {request.POST.get('stockName')}")
             return render(request, "CustomerHomePage/customer_homepage.html", {})
 
