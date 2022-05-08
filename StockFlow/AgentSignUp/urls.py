@@ -25,6 +25,7 @@ urlpatterns = [
     path("customer_homepage/search_stock", views.SearchStock, name="Search_Stock"),
     path("customer_profile", views.Customer_Profile, name="Customer Profile"),
     path("agent_portfolio_requests", views.Agent_PortfolioRequests, name="Agent Profile"),
+    path("agent_stock_deal", views.Agent_StockDeal, name="Agent Stock Deals"),
     #path("customer_buy", views.Customer_Purchase, name="Customer Stock Buy"),
 
 ]
