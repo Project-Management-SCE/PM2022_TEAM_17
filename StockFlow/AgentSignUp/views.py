@@ -44,11 +44,12 @@ def buyStock(request):
             stockName = request.POST.get('stockName')
             stockAmount = request.POST.get('stockAmount')
             userID = request.user
-            if (StockDeal.objects.get(custID=userID, stock=stockName)):
+            
+            if (StockDeal.objects.filter(custID=userID).filter(stock=stockName)):
                 Deal = StockDeal.objects.get(custID=userID,stock=stockName)
                 Deal.isBuy = Deal.isBuy + int(stockAmount)
             else:       
-                Deal = StockDeal(stock=stockName,custID=userID,isBuy=stockAmount)
+                Deal = StockDeal(stock=stockName,custID=userID,isBuy=int(stockAmount))
             Deal.save()
             return render(request, "CustomerHomePage/customer_homepage.html", {})
         except:
@@ -426,4 +427,56 @@ def portfolio_confirm(request,agentID):
 @login_required
 def Agent_StockDeal(request):
     deals = StockDeal.objects.all()
+    if request.method == "POST":
+        print("here!")
+        if 'confirm' in request.POST:
+            buying_stock_confirm(request)
+        if 'decline' in request.POST:
+            buying_stock_decline(request)
+    return render(request, "AgentStocks/agent_stocks.html", {'Deals':deals})
+
+
+def buying_stock_confirm(request):
+    deals = StockDeal.objects.all()
+    if request.method == "POST":
+        customerID=request.POST.get("confirm")
+        stockname=request.POST.get("stockname")
+        if customerID is not None:
+            stock=StockDeal.objects.get(custID=int(customerID),stock=stockname)
+            stock.amount=stock.amount+stock.isBuy
+            stock.isBuy=0
+            stock.save()
+            customer=User.objects.get(ID=customerID)        #email
+            email=customer.email
+            send_mail(
+                'Your Request!',
+                'Hello,Your request from StockFlow.com for Buying the stock '+stock.stock+' was confirmed,please enter the site to see the changes.Have A nice day:)',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+            return render(request, "AgentStocks/agent_stocks.html", {'Deals':deals})
+    #return render(request, "AdminHomePage/admin_agentrequestslist.html", {"agents":agents})
+    return redirect('/home')
+
+def buying_stock_decline(request):
+    deals = StockDeal.objects.all()
+    if request.method == "POST":
+        stockname=request.POST.get("stockname")
+        customerID=request.POST.get("decline")
+        if customerID is not None:
+            stock=StockDeal.objects.get(custID=int(customerID),stock=stockname)
+            stock.isBuy=0
+            stock.save()
+            customer=User.objects.get(ID=customerID)        #email
+            email=customer.email
+            send_mail(
+                'Your Request!',
+                'Hello,Your request from StockFlow.com for Buying the stock '+stock.stock+' was declined.Have A nice day:)',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+            if(stock.amount==0 and stock.isSell==0 ):
+                stock.delete()
     return render(request, "AgentStocks/agent_stocks.html", {'Deals':deals})

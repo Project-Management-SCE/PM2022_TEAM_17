@@ -29,7 +29,7 @@
                 </thead>
                 <tbody>
                     {%for deal in Deals%} {% if deal.isBuy %}
-                    <form method="post " action="# ">
+                    <form method="post" action="# ">
                         {% csrf_token %}
                         <tr>
                             <td>{{deal.custID.ID}}</td>
@@ -40,16 +40,18 @@
                             <form action='' method="post" enctype="multipart/form-data ">
                                 {% csrf_token %}
                                 <td>
-                                    <button type="submit" class="confirm btn btn-success shadow-4" name="confirm " id="confirm " value="{{customer.ID}} ">Confirm</button>
+                                    <button type="submit" class="confirm btn btn-success shadow-4" name="confirm" id="confirm" value="{{deal.custID.ID}} ">Confirm</button>
                                 </td>
+                                <input type="hidden" id="stockname" name="stockname" value="{{deal.stock}}">
                             </form>
                             <!--<input hidden=True name="confirm " value="{{customer.ID}} ">-->
                             <!--<input hidden=True name="decline " value="{{customer.ID}} ">-->
                             <form action='' method="post" enctype="multipart/form-data ">
                                 {% csrf_token %}
                                 <td>
-                                    <button type="submit" class="decline btn btn-danger btn-rounded shadow-4" name="decline " id="decline " value="{{customer.ID}} ">Decline</button>
+                                    <button type="submit" class="decline btn btn-danger btn-rounded shadow-4" name="decline" id="decline" value="{{deal.custID.ID}} ">Decline</button>
                                 </td>
+                                <input type="hidden" id="stockname" name="stockname" value="{{deal.stock}}">
                             </form>
                         </tr>
                     </form>
