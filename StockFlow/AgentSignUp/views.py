@@ -23,6 +23,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 import yfinance as yf
+from plotly import graph_objs as go
+
 
 @login_required
 #def Customer_Purchase(request):
@@ -40,11 +42,11 @@ def buyStock(request):
             stockName = request.POST.get('stockName')
             stockAmount = request.POST.get('stockAmount')
             userID = request.user
-            Deal = StockDeal(stock=stockName,custID=userID,isBuy=stockAmount)
-            if (StockDeal.objects.filter(custID=userID)):
-                customer = StockDeal.objects.filter(custID=userID)
-                Deal.amount = customer.amount
-                Deal.isSell = customer.isSell
+            if (StockDeal.objects.filter(custID=userID) and StockDeal.objects.filter(stock=stockName)):
+                Deal = StockDeal.objects.filter(custID=userID).filter(stock=stockName)
+                Deal.isBuy += stockAmount
+            else:       
+                Deal = StockDeal(stock=stockName,custID=userID,isBuy=stockAmount)
             Deal.save()
             return render(request, "CustomerHomePage/customer_homepage.html", {})
         except:
@@ -54,17 +56,34 @@ def buyStock(request):
 def SearchStock(response):
     if response.method == "POST":
         try:
-            searchStock = response.POST.get('searchStock')
-            stock = yf.Ticker(searchStock)
+            stockTicker = response.POST.get('searchStock')
+            stockData = yf.download(tickers=stockTicker,start="2022-01-01",end="2022-05-01", interval="5d", rounding=True)
+            graph = go.Figure()
+            graph.add_trace(go.Candlestick())
+            graph.add_trace(go.Candlestick(x=stockData.index,open = stockData['Open'], high=stockData['High'], low=stockData['Low'], close=stockData['Close'], name = 'market data'))
+            graph.update_layout(title = f"{yf.Ticker(stockTicker).info['shortName']} share price", yaxis_title='Stock Price (USD)')
+            stock = yf.Ticker(stockTicker)
             price = stock.info['regularMarketPrice']
             symbol = stock.info['symbol']
             recom = stock.info['recommendationKey']
             website = stock.info['website']
-            return render(response, "stock_view.html", {"price": price, "ticker": symbol, "recom": recom, "website": website})
+            return render(response, "stock_view.html", {"price": price, "ticker": symbol, "recom": recom, "website": website, "graph": graph})
         except:
-            messages.error(response, f"Stock named {searchStock} doesn't found or not exists")
+            messages.error(response, f"Stock named {stockTicker} doesn't found or not exists")
+            if response.user.is_Customer:
+                return render(response, "CustomerHomePage/customer_homepage.html", {})
+            elif response.user.is_Agent:
+                return render(response, "AgentHomePage/agent_homepage.html", {})
+            elif response.user.is_Admin:
+                return render(response, "AdminHomePage/admin_homepage.html", {})
+    else:
+        if response.user.is_Customer:
             return render(response, "CustomerHomePage/customer_homepage.html", {})
-    
+        elif response.user.is_Agent:
+            return render(response, "AgentHomePage/agent_homepage.html", {})
+        elif response.user.is_Admin:
+            return render(response, "AdminHomePage/admin_homepage.html", {})
+                
         
 
 
