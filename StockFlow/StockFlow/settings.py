@@ -115,7 +115,6 @@ DATABASES = {
          'PORT':'',
          'OPTIONS':{
              'DRIVER':'SQL Server Native Client 11.0',
-             'dsn': 'djangodatabase',
              'MARS_Connection':'True',
          }
      }
