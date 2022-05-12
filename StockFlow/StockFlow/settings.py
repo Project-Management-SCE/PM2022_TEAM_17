@@ -8,7 +8,8 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import sys
+import os
 from pathlib import Path
 
 
@@ -103,25 +104,36 @@ WSGI_APPLICATION = 'StockFlow.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+Testing = sys.argv[1:2] == ['test']
+if not Testing:
+    DATABASES = {
 
-DATABASES = {
-     'default': {
-         #'tcp':'stockflow-db.database.windows.net',
+        'default': {
+            #'tcp':'stockflow-db.database.windows.net',
 
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'szleqasu',
-        'USER': 'szleqasu',
-        'PASSWORD': 'MnebV98dwiGY7rHhiUxxFGoMEh7VG4vO',
-            # ↓ HOST instead of HOSTS
-        'HOST': 'chunee.db.elephantsql.com',
-         'PORT':'',
-        #  'OPTIONS':{
-        #      'DRIVER':'SQL Server Native Client 11.0',
-        #      'dsn': 'djangodatabase',
-        #      'MARS_Connection':'True',
-        #  }
-     }
- }
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'szleqasu',
+            'USER': 'szleqasu',
+            'PASSWORD': 'MnebV98dwiGY7rHhiUxxFGoMEh7VG4vO',
+                # ↓ HOST instead of HOSTS
+            'HOST': 'chunee.db.elephantsql.com',
+            'PORT':'',
+            #  'OPTIONS':{
+            #      'DRIVER':'SQL Server Native Client 11.0',
+            #      'dsn': 'djangodatabase',
+            #      'MARS_Connection':'True',
+            #  }
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+        "TEST": {
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }}
+
 
 
 # Password validation
