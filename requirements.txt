@@ -1,4 +1,4 @@
-django==3.2
+django
 django-jenkins==0.110.0
 django-test
 yfinance==0.1.70

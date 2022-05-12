@@ -112,8 +112,6 @@ DATABASES = {
         'PASSWORD': 'MnebV98dwiGY7rHhiUxxFGoMEh7VG4vO',
         'HOST': 'chunee.db.elephantsql.com',
         'PORT':'',
-        }
-     }
 
 
 # Password validation
