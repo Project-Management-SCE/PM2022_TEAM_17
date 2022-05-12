@@ -4,4 +4,8 @@ django-test
 mysqlclient
 yfinance
 coverage
-pylint
+sql_server
+matplotlib
+urllib
+base64
+io
