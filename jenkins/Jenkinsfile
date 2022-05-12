@@ -23,9 +23,9 @@ pipeline {
             } 
             
              steps{
+                sh 'pip install -r requirements.txt'
                 withEnv(["HOME=${env.WORKSPACE}"]){  
-                     dir('StockFlow'){
-                        sh 'pip install -r requirements.txt'
+                     dir('StockFlow'){                    
                         sh 'python -m coverage run --source="." manage.py test'
                         sh 'python -m coverage report'
                         sh 'python manage.py check'
