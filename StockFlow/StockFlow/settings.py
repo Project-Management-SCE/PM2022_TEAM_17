@@ -107,7 +107,9 @@ WSGI_APPLICATION = 'StockFlow.wsgi.application'
 DATABASES = {
      'default': {
          'tcp':'stockflow-db.database.windows.net',
-         'ENGINE':'django_pyodbc',
+
+         'ENGINE':'mssql',
+
          'NAME':'djangodatabase',
          'USER':'stockflow',
          'PASSWORD':'123team17!',
