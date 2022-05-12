@@ -106,20 +106,20 @@ WSGI_APPLICATION = 'StockFlow.wsgi.application'
 
 DATABASES = {
      'default': {
-         'tcp':'stockflow-db.database.windows.net',
+         #'tcp':'stockflow-db.database.windows.net',
 
-         'ENGINE':'mssql',
-
-         'NAME':'djangodatabase',
-         'USER':'stockflow',
-         'PASSWORD':'123team17!',
-         'HOST':'stockflow-db.database.windows.net',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'szleqasu',
+        'USER': 'szleqasu',
+        'PASSWORD': 'MnebV98dwiGY7rHhiUxxFGoMEh7VG4vO',
+            # ↓ HOST instead of HOSTS
+        'HOST': 'chunee.db.elephantsql.com',
          'PORT':'',
-         'OPTIONS':{
-             'DRIVER':'SQL Server Native Client 11.0',
-             'dsn': 'djangodatabase',
-             'MARS_Connection':'True',
-         }
+        #  'OPTIONS':{
+        #      'DRIVER':'SQL Server Native Client 11.0',
+        #      'dsn': 'djangodatabase',
+        #      'MARS_Connection':'True',
+        #  }
      }
  }
 
