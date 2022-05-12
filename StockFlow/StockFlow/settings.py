@@ -114,7 +114,7 @@ DATABASES = {
          'HOST':'stockflow-db.database.windows.net',
          'PORT':'',
          'OPTIONS':{
-             'DRIVER':'SQL Server Native Client 11.0',
+             'DRIVER':'ODBC Driver 17 for SQL Server',
              'MARS_Connection':'True',
          }
      }
