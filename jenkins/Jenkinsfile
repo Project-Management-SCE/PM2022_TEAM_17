@@ -26,9 +26,9 @@ pipeline {
                 withEnv(["HOME=${env.WORKSPACE}"]){  
                      sh 'pip install -r requirements.txt'
                      dir('StockFlow'){ 
-                        sh 'python3 -m coverage run --source="." manage.py test'
-                        sh 'python3 -m coverage report'
-                        sh 'python3 manage.py check'
+                        //sh 'python3 -m coverage run --source="." manage.py test'
+                        //sh 'python3 -m coverage report'
+                        //sh 'python3 manage.py check'
                 }
                 }
              }
