@@ -19,17 +19,18 @@ pipeline {
                     image 'django'
                     image 'python:3.7'
                     image 'tadeorubio/pyodbc-msodbcsql17'
+                    image 'goaoza/mssql-odbc:v3'
                 }
             } 
             
              steps{
                 
                 withEnv(["HOME=${env.WORKSPACE}"]){  
-                     sh 'pip install -r requirements.txt'
+                     sh 'pip3 install -r requirements.txt'
                      dir('StockFlow'){   
-                        sh 'python -m coverage run --source="." manage.py test'
-                        sh 'python -m coverage report'
-                        sh 'python manage.py check'
+                        sh 'python3 -m coverage run --source="." manage.py test'
+                        sh 'python3 -m coverage report'
+                        sh 'python3 manage.py check'
                 }
                 }
              }
