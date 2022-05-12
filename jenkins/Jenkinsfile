@@ -25,10 +25,11 @@ pipeline {
                 
                 withEnv(["HOME=${env.WORKSPACE}"]){  
                      sh 'pip install -r requirements.txt'
+                     
                      dir('StockFlow'){ 
-                        //sh 'python3 -m coverage run --source="." manage.py test'
-                        //sh 'python3 -m coverage report'
-                        //sh 'python3 manage.py check'
+                        sh 'python -m coverage run --source="." manage.py test --keepdb'
+                        sh 'python -m coverage report'
+                        sh 'python manage.py check'
                 }
                 }
              }
@@ -41,12 +42,12 @@ pipeline {
                }
            }
            steps {
-               sh '''
-                   curl https://cli-assets.heroku.com/install.sh | sh;
-                   heroku container:login
-                   heroku container:push web --app stockflow-17
-                   heroku container:release web --app stockflow-17
-               '''
+//                sh '''
+//                    curl https://cli-assets.heroku.com/install.sh | sh;
+//                    heroku container:login
+//                    heroku container:push web --app stockflow-17
+//                    heroku container:release web --app stockflow-17
+//                '''
            }
        }
 
