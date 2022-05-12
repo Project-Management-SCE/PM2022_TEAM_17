@@ -18,6 +18,7 @@ pipeline {
                 docker {
                     image 'django'
                     image 'python:3.7'
+                    image 'tadeorubio/pyodbc-msodbcsql17'
                 }
             } 
             
