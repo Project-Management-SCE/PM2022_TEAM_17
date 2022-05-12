@@ -115,8 +115,6 @@ DATABASES = {
             # ↓ HOST instead of HOSTS
         'HOST': 'chunee.db.elephantsql.com',
         'PORT':'',
-        'TEST': {
-            'NAME': 'default',
         #  'OPTIONS':{
         #      'DRIVER':'SQL Server Native Client 11.0',
         #      'dsn': 'djangodatabase',
