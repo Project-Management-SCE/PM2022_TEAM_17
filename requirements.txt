@@ -4,8 +4,9 @@ django-test
 mysqlclient
 yfinance
 coverage
-sql_server
 matplotlib
 urllib
 base64
 io
+django-pyodbc
+django-pyodbc-azure
