@@ -1,4 +1,4 @@
-django
+django==2.1.15
 django-jenkins
 django-test
 mysqlclient
