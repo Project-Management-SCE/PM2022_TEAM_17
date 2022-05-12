@@ -17,7 +17,7 @@ pipeline {
             agent {
                 docker {
                     image 'django'
-                    image 'fnndsc/centos-python3'
+                    image 'python:3.7'
                     image 'tadeorubio/pyodbc-msodbcsql17'
                     image 'goaoza/mssql-odbc:v3'
                 }
