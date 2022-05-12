@@ -1,5 +1,5 @@
 django==2.1.15
-django-jenkins
+django-jenkins==0.110.0
 django-test
 yfinance
 coverage
@@ -9,4 +9,4 @@ urllib
 pybase64
 requires.io
 django-pyodbc
-django-pyodbc-azure
+django-pyodbc-azure=2.1.0.0
