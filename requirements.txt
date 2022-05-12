@@ -5,7 +5,7 @@ mysqlclient
 yfinance
 coverage
 matplotlib
-urllib
+urllib3
 base64
 io
 django-pyodbc
