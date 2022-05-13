@@ -1,7 +1,7 @@
-FROM python:3-alpine
-COPY . /StockFlow
-WORKDIR /StockFlow
+FROM python:3
+ENV PYTHONUNBUFFERED=1
+COPY . /
+WORKDIR /StockFlow 
 RUN pip install -r requirements.txt
-RUN python manage.py makemigrations
-RUN python manage.py migrate
-CMD [ "python", "./manage.py", "runserver"]
+ENTRYPOINT ["sh","entrypoint.sh"]
+

@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-*^@6rgitt8o-73)=rrdqg#dd5nw8y!4^$0=m-$8=nv%bf)4w9=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['stockflow-17.herokuapp.com']
 
 #gmail email send/settings.py
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -179,3 +179,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Configure Django App for Heroku.
