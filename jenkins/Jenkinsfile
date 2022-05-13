@@ -13,43 +13,43 @@ pipeline {
                 }
             }
         }
-        stage('Test') {
-            agent {
-                docker {
-                    image 'django'
-                    image 'python:3.7'
-                }
-            } 
-            
-             steps{
-                
-                withEnv(["HOME=${env.WORKSPACE}"]){  
-                     sh 'pip install -r requirements.txt'
-                     
-                     dir('StockFlow'){ 
-                        //sh 'python -m coverage run --source="." manage.py test '
-                        //sh 'python -m coverage report'
-                        sh 'python manage.py test --keepdb'
-                }
-                }
-             }
-        }
-        //stage('Deploy to Heroku') {
-        //   agent {
-        //       docker {
-        //           image 'cimg/base:stable'
-        //           args '-u root'
-        //       }
-        //   }
-        //   steps {
-//                sh '''
-//                    curl https://cli-assets.heroku.com/install.sh | sh;
-//                    heroku container:login
-//                    heroku container:push web --app stockflow-17
-//                    heroku container:release web --app stockflow-17
-//                '''
-//           }
-//       }
-//
+        //stage('Test') {
+        //    agent {
+        //        docker {
+        //            image 'django'
+        //            image 'python:3.7'
+        //        }
+        //    } 
+        //    
+        //     steps{
+        //        
+        //        withEnv(["HOME=${env.WORKSPACE}"]){  
+        //             sh 'pip install -r requirements.txt'
+        //             
+        //             dir('StockFlow'){ 
+        //                sh 'python -m coverage run --source="." manage.py test '
+        //                sh 'python -m coverage report'
+        //                sh 'python manage.py test --keepdb'
+        //        }
+        //        }
+        //     }
+        //}
+        stage('Deploy to Heroku') {
+           agent {
+               docker {
+                   image 'cimg/base:stable'
+                   args '-u root'
+               }
+           }
+           steps {
+                sh '''
+                    curl https://cli-assets.heroku.com/install.sh | sh;
+                    heroku container:login
+                    heroku container:push web --app stockflow-17
+                    heroku container:release web --app stockflow-17
+                '''
+           }
+       }
+
     }
 }
