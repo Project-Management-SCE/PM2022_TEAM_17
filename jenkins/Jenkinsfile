@@ -29,7 +29,7 @@ pipeline {
                      dir('StockFlow'){ 
                         //sh 'python -m coverage run --source="." manage.py test '
                         //sh 'python -m coverage report'
-                        sh 'python manage.py test'
+                        sh 'python manage.py test --keepdb'
                 }
                 }
              }
