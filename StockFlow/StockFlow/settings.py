@@ -39,7 +39,7 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'default from email'
 
 # Application definition
-CSRF_TRUSTED_ORIGINS = ["https://stockflow-17.herokuapp.com/","https://www.stockflow-17.herokuapp.com/"]
+CSRF_TRUSTED_ORIGINS = ["https://stockflow-17.herokuapp.com","https://www.stockflow-17.herokuapp.com"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
