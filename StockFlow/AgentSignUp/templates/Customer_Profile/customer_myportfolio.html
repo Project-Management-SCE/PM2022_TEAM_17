@@ -1,0 +1,58 @@
+{% extends 'base.html' %} {% block title %} {{request.user.full_name}} MyPortfolio Page {% endblock %} {% block content %}
+<div class="vh-100">
+    <div class="d-flex align-items-center flex-column bd-highlight mt-4 mb-3">
+        <h2>Hello {{request.user.full_name}}</h2>
+        <h4>It's your portfolio page</h4>
+        <button class="btn btn-info btn-rounded" type="submit">See Portfolio</button><br>
+        <button class="btn btn-dark btn-rounded" type="submit">Remove Portfolio</button>
+    </div>
+
+    <div>
+        <h5>Your Stocks List</h5>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">No.</th>
+                    <th scope="col">Stock Ticker</th>
+                    <th scope="col">Count</th>
+                    <th scope="col">Value</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {%for i in d%}
+                <form method="post" action="#">
+                    {% csrf_token %}
+                    <tr>
+                        <td>${i.ids}</td>
+                        <td>${i.tickers}</td>
+                        <td>${i.amount}</td>
+                        <td>{d.amount}</td>
+                        
+                        
+                    </tr>
+                </form>
+                {%endfor%}
+            </tbody>
+            <!-- <tbody>
+                {%for stock in stocks%}
+                <form method="post" action="#">
+                    {% csrf_token %}
+                    <tr>
+                        <td>{{stock.id}}</td>
+                        <td>{{stock.stock}}</td>
+                        <td>{{stock.amount}}</td>
+                        <td>{{amount.0}}</td>
+                        
+                        
+                    </tr>
+                </form>
+                {%endfor%}
+            </tbody> -->
+            
+        </table>
+
+    </div>
+</div>
+{% endblock %}
