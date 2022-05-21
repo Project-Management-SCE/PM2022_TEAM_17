@@ -1,7 +1,0 @@
-django
-django-jenkins
-django-test
-mysqlclient
-yfinance
-coverage
-pylint

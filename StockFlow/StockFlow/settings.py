@@ -8,7 +8,8 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import sys
+import os
 from pathlib import Path
 
 
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-*^@6rgitt8o-73)=rrdqg#dd5nw8y!4^$0=m-$8=nv%bf)4w9=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['stockflow-17.herokuapp.com']
 
 #gmail email send/settings.py
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -38,6 +39,7 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'default from email'
 
 # Application definition
+CSRF_TRUSTED_ORIGINS = ["https://stockflow-17.herokuapp.com","https://www.stockflow-17.herokuapp.com"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -103,7 +105,37 @@ WSGI_APPLICATION = 'StockFlow.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+Testing = sys.argv[1:2] == ['test']
+if not Testing:
+    DATABASES = {
 
+        'default': {
+            #'tcp':'stockflow-db.database.windows.net',
+
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'szleqasu',
+            'USER': 'szleqasu',
+            'PASSWORD': 'MnebV98dwiGY7rHhiUxxFGoMEh7VG4vO',
+                # ↓ HOST instead of HOSTS
+            'HOST': 'chunee.db.elephantsql.com',
+            'PORT':'',
+            #  'OPTIONS':{
+            #      'DRIVER':'SQL Server Native Client 11.0',
+            #      'dsn': 'djangodatabase',
+            #      'MARS_Connection':'True',
+            #  }
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+        "TEST": {
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }}
+
+<<<<<<< HEAD
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -128,6 +160,8 @@ DATABASES = {
          }
      }
  }
+=======
+>>>>>>> 191bc414a68f97f17f63d631b06fb09b4c0a4dc4
 
 
 # Password validation
@@ -173,3 +207,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Configure Django App for Heroku.
