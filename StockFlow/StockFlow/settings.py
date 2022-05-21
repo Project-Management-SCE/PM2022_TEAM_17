@@ -135,33 +135,6 @@ else:
         }
     }}
 
-<<<<<<< HEAD
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-
-DATABASES = {
-     'default': {
-         'tcp':'stockflow-db.database.windows.net',
-         'ENGINE':'sql_server.pyodbc',
-         'NAME':'djangodatabase',
-         'USER':'stockflow',
-         'PASSWORD':'123team17!',
-         'HOST':'stockflow-db.database.windows.net',
-         'PORT':'',
-         'OPTIONS':{
-             'DRIVER':'SQL Server Native Client 11.0',
-             'dsn': 'djangodatabase',
-             'MARS_Connection':'True',
-         }
-     }
- }
-=======
->>>>>>> 191bc414a68f97f17f63d631b06fb09b4c0a4dc4
 
 
 # Password validation
