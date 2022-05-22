@@ -378,33 +378,10 @@ def Customer_Profile(request):
 @login_required
 def Customer_MyPortfolio(request):
     if request.user.is_Customer and not request.user.is_Agent:
-        if request.method == "POST" and request.user.isPortfolio=="confirmed":
-            #and request.user.isPortfolio=="confirmed"
+        if request.user.isPortfolio=="confirmed":
+
             stocks = StockDeal.objects.filter(custID_id=request.user.ID)
             
-
-            tickers = ['AAPL', 'MSFT', '^GSPC']
-            tickers = [s.stock for s in stocks]
-
-            start_date = '2022-04-03'
-            end_date = '2022-05-03'
-
-            value = []
-            for t in tickers:
-                panel_data = data.DataReader(str(t), 'yahoo', start_date, end_date)
-                price = panel_data['Close'][len(panel_data['Close'])-1]
-                value.append(price)
-
-            #amount = [s.count * s.price for s in stocks]
-            #amount = "checking"
-
-            return render(request, "Customer_Profile/customer_myportfolio.html", {"stocks": stocks, "amount": value})
-        else:
-            
-            stocks = StockDeal.objects.filter(custID_id=request.user.ID)
-            
-
-            tickers = ['AAPL', 'MSFT', '^GSPC']
             tickers = [s.stock for s in stocks]
             amount = [s.amount for s in stocks]
             ids = [s.id for s in stocks]
@@ -416,14 +393,21 @@ def Customer_MyPortfolio(request):
             for t in range(len(tickers)):
                 panel_data = data.DataReader(str(tickers[t]), 'yahoo', start_date, end_date)
                 price = panel_data['Close'][len(panel_data['Close'])-1]
-                value.append(float(price*amount[t]))
-                
+                value.append(round(float(price*amount[t]), 2))
 
-            d = {"value": value, "ids": ids, "tickers": tickers, "amount": amount}
+            d = []
+            for i in range(len(tickers)):
+                d.append((ids[i], tickers[i], amount[i], value[i]))
 
-            return render(request, "Customer_Profile/customer_myportfolio.html", {"d": d})
-            #return HttpResponse("<h1>No Portfolio was found!!!<h1>")
+            pval = sum(value)
+            
+            return render(request, "Customer_Profile/customer_myportfolio.html", {"d": d, "pval": pval})
+
+        else:
+
+            return HttpResponse("<h1>No Portfolio was found!!!<h1>")
     else:
+
         return redirect('/home')
 
 
