@@ -15,6 +15,7 @@ urlpatterns = [
 
     path("admin_homepage/", views.AdminHomePage, name="admin_homepage"),
     path("agent_homepage/", views.AgentHomePage, name="agent_homepage"),
+    path("agent_active_customers/", views.AgentActiveCustomers, name="agent_active_customers"), #
     path("customer_homepage/", views.CustomerHomePage, name="customer_homepage"),
 
     path("logout", views.Logout, name="logout"),
