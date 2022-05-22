@@ -27,6 +27,9 @@ import matplotlib.pyplot as plt
 import io
 import urllib, base64
 
+from pandas_datareader import data
+import pandas as pd
+
 
 @login_required
 #def Customer_Purchase(request):
@@ -369,6 +372,42 @@ def Customer_Profile(request):
         else:
             return render(request, "Customer_Profile/customer_profilepage.html", {})
     else:
+        return redirect('/home')
+
+#
+@login_required
+def Customer_MyPortfolio(request):
+    if request.user.is_Customer and not request.user.is_Agent:
+        if request.user.isPortfolio=="confirmed":
+
+            stocks = StockDeal.objects.filter(custID_id=request.user.ID)
+            
+            tickers = [s.stock for s in stocks]
+            amount = [s.amount for s in stocks]
+            ids = [s.id for s in stocks]
+
+            start_date = '2022-04-03'
+            end_date = '2022-05-03'
+
+            value = []
+            for t in range(len(tickers)):
+                panel_data = data.DataReader(str(tickers[t]), 'yahoo', start_date, end_date)
+                price = panel_data['Close'][len(panel_data['Close'])-1]
+                value.append(round(float(price*amount[t]), 2))
+
+            d = []
+            for i in range(len(tickers)):
+                d.append((ids[i], tickers[i], amount[i], value[i]))
+
+            pval = sum(value)
+            
+            return render(request, "Customer_Profile/customer_myportfolio.html", {"d": d, "pval": pval})
+
+        else:
+
+            return HttpResponse("<h1>No Portfolio was found!!!<h1>")
+    else:
+
         return redirect('/home')
 
 
