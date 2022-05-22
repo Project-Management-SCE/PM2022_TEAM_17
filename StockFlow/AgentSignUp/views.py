@@ -400,7 +400,7 @@ def Customer_MyPortfolio(request):
                 d.append((ids[i], tickers[i], amount[i], value[i]))
 
             pval = sum(value)
-            
+
             return render(request, "Customer_Profile/customer_myportfolio.html", {"d": d, "pval": pval})
 
         else:
@@ -424,6 +424,25 @@ def Agent_PortfolioRequests(request):
         return render(request, "AgentHomePage/agent_portfoliorequests.html", {"customers":customers})
     else:
         return redirect('/home')
+
+
+#
+@login_required
+def AgentActiveCustomers(request):
+    if request.user.is_Agent and not request.user.is_Customer:
+
+        agentid=request.user.ID
+        cus = Portfolios.objects.filter(agentID=agentid)
+        s=[]
+        for c in cus:
+            d=User.objects.get(ID=c.customerID)
+            #s.append((d.full_name,d.email))
+            s.append(d)
+
+        return render(request, "AgentHomePage/agent_active_customers.html", {"s":s})
+    else:
+        return redirect('/home')
+
 
 def portfolio_decline(request):
     customers = User.objects.filter(isPortfolio="waiting").filter(is_Customer=True)

@@ -89,7 +89,8 @@
                 {% endif %}
                 <li class="nav-item dropdown">
                     {% if request.user.is_authenticated and not request.user.is_Customer and request.user.is_Agent %}
-                    <a class="nav-link" href="/agent_stock_deal" id="navbarDropdownMenuLink">Stock Deal Requests </a> {% endif %}
+                    <a class="nav-link" href="/agent_stock_deal" id="navbarDropdownMenuLink">Stock Deal Requests </a> 
+                    <a class="nav-link" href="/agent_active_customers" id="navbarDropdownMenuLink">My Customers </a>{% endif %}
                 </li>
                 <!--<li class="nav-item dropdown">
                     {% if request.user.is_authenticated and request.user.is_Customer and not is_Agent %}
