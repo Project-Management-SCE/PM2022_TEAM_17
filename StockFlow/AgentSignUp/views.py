@@ -467,7 +467,6 @@ def portfolio_confirm(request,agentID):
 def Agent_StockDeal(request):
     deals = StockDeal.objects.all()
     if request.method == "POST":
-        print("here!")
         if 'confirm' in request.POST:
             buying_stock_confirm(request)
         if 'decline' in request.POST:
@@ -519,3 +518,26 @@ def buying_stock_decline(request):
             if(stock.amount==0 and stock.isSell==0 ):
                 stock.delete()
     return render(request, "AgentStocks/agent_stocks.html", {'Deals':deals})
+
+def StockQuery(request):
+    deals = StockDeal.objects.all()
+    tickers=[]
+    stocks=[]
+    #if request.method == "POST":
+    for stock in deals:
+        if stocks is None:
+            stocks.append((stock.stock,stock.amount))
+            tickers.append(stock.stock)
+        else:
+            if stock.stock in tickers:
+                for a in stocks:
+                    if a[0]==stock.stock:
+                        stocks.append((stock.stock,a[1]+stock.amount))
+                        stocks.remove(a)
+                        break
+            else:
+                stocks.append((stock.stock,stock.amount))
+                tickers.append(stock.stock)
+    print(tickers)
+    print(stocks)
+    return render(request, "AdminHomePage/admin_stockquery.html", {'stocks':stocks})

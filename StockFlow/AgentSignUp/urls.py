@@ -19,6 +19,7 @@ urlpatterns = [
 
     path("logout", views.Logout, name="logout"),
     path("admin_agentrequestslist/", views.AgentRequestsList, name="admin_agentrequestslist"),
+    path("admin_stockquery/", views.StockQuery, name="admin_stockquery"),
 
     path("admin_homepage/search_stock", views.SearchStock, name="Search_Stock1"),
     path("agent_homepage/search_stock", views.SearchStock, name="Search_Stock2"),

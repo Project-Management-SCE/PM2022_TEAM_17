@@ -1,0 +1,23 @@
+{% extends "base.html" %} {% block title %} Stocks Query{% endblock %} {% block content %}
+<section class="vh-100">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Stock Name</th>
+                <th scope="col">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for stock in stocks%}
+            <form method="post" action="#">
+                {% csrf_token %}
+                <tr>
+                    <td>{{stock.0}}</td>
+                    <td>{{stock.1}}</td>
+                </tr>
+            </form>
+            {%endfor%}
+        </tbody>
+    </table>
+</section>
+{% endblock %}
