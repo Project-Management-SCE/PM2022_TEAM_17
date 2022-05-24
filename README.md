@@ -1,4 +1,4 @@
-<a href="https://stockflow-17.herokuapp.com<img src="StockFlow\AgentSignUp\assets\StockFlow Banner.png" alt=""></a><br/>
+<a href="https://stockflow-17.herokuapp.com"><img src="StockFlow\AgentSignUp\assets\StockFlow Banner.png" alt=""></a><br/>
 StockFlow - Buying & Selling Stocks Simulator!<br/>
 You can do the following:<br/>
 
