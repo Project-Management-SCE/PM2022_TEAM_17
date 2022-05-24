@@ -1,0 +1,11 @@
+﻿django
+django-jenkins==0.110.0
+django-test
+yfinance==0.1.70
+coverage==6.3.2
+matplotlib
+urllib3
+pybase64
+requires.io
+psycopg2==2.8.6
+pandas_datareader
