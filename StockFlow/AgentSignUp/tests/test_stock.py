@@ -15,9 +15,8 @@ class TestAgentStock(TestCase):
         self.assertEqual(response.status_code,302) 
 
     def test_Agent_wrong_stock(self):
-        response = self.client.post('AgentSignUp:Search_Stock_agent', data={
-            'searchStock':'badStock'})
-        
+        self.assertRaises(Exception,self.client.post('AgentSignUp:Search_Stock_agent', data={
+            'searchStock':'badStock'}))
 
 
 
@@ -35,8 +34,8 @@ class TestAdminStock(TestCase):
 
     
     def test_Admin_wrong_stock(self):
-        response = self.client.post('AgentSignUp:Search_Stock_admin', data={
-            'searchStock':'badStock'})
+        self.assertRaises(Exception,self.client.post('AgentSignUp:Search_Stock_admin', data={
+            'searchStock':'badStock'}))
         
 
 
