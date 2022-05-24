@@ -22,9 +22,9 @@ urlpatterns = [
     path("admin_agentrequestslist/", views.AgentRequestsList, name="admin_agentrequestslist"),
     path("admin_stockquery/", views.StockQuery, name="admin_stockquery"),
 
-    path("admin_homepage/search_stock", views.SearchStock, name="Search_Stock1"),
-    path("agent_homepage/search_stock", views.SearchStock, name="Search_Stock2"),
-    path("customer_homepage/search_stock", views.SearchStock, name="Search_Stock3"),
+    path("admin_homepage/search_stock", views.SearchStock, name="Search_Stock_admin"),
+    path("agent_homepage/search_stock", views.SearchStock, name="Search_Stock_agent"),
+    path("customer_homepage/search_stock", views.SearchStock, name="Search_Stock_cust"),
     path("customer_homepage/buy_stock", views.buyStock, name="Buy_Stock"),
     path("customer_profile", views.Customer_Profile, name="Customer Profile"),
     path("customer_myportfolio", views.Customer_MyPortfolio, name="Customer MyPortfolio"), #
