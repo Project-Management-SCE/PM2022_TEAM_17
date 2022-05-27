@@ -511,13 +511,32 @@ def Agent_StockDeal(request):
         if 'decline_buy' in request.POST:
             buying_stock_decline(request)
         if 'confirm_sell' in request.POST:
-            #buying_stock_confirm(request)
-            print("confirm sell\n")
             sell_stock_confirm(request)
         if 'decline_sell' in request.POST:
-            #buying_stock_decline(request)
             print("decline sell\n")
-            pass
+            sell_stock_decline(request)
+    return render(request, "AgentStocks/agent_stocks.html", {'Deals':deals})
+
+def sell_stock_decline(request):
+    deals = StockDeal.objects.all()
+    if request.method == "POST":
+        stockname=request.POST.get("stockname")
+        customerID=request.POST.get("decline_sell")
+        if customerID is not None:
+            stock=StockDeal.objects.get(custID=int(customerID),stock=stockname)
+            stock.isSell=0
+            stock.save()
+            customer=User.objects.get(ID=customerID)        #email
+            email=customer.email
+            send_mail(
+                'Your Request!',
+                'Hello,Your request from StockFlow.com for selling the stock '+stock.stock+' was declined.Have A nice day:)',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+            if(stock.amount==0 and stock.isBuy==0 ):
+                stock.delete()
     return render(request, "AgentStocks/agent_stocks.html", {'Deals':deals})
 
 def sell_stock_confirm(request):
@@ -571,8 +590,8 @@ def buying_stock_confirm(request):
 def buying_stock_decline(request):
     deals = StockDeal.objects.all()
     if request.method == "POST":
-        stockname=request.POST.get("decline_buy")
-        customerID=request.POST.get("decline")
+        stockname=request.POST.get("stockname")
+        customerID=request.POST.get("decline_buy")
         if customerID is not None:
             stock=StockDeal.objects.get(custID=int(customerID),stock=stockname)
             stock.isBuy=0
