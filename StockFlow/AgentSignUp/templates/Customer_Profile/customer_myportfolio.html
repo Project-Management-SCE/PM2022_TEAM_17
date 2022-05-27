@@ -37,13 +37,23 @@
                         <form action='' method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             <td>
-                                <button type="submit" style="background-color: rgb(53, 211, 211)" class="confirm" name="buy" id="confirm">Buy</button>
+                                <div>
+                                    <input type="number" name="Buy_Amount" min="1" max="15" required>
+                                    <button type="submit" style="background-color: rgb(53, 211, 211)" class="buy" name="buy" id="buy">Buy</button>
+                                </div>
                             </td>
                         </form>
                         <form action='' method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             <td>
-                                <button type="submit" style="background-color: peachpuff" class="decline" name="sell" id="decline">Sell</button>
+                                <div >
+                                    {% if i.2 != 0 %}
+                                    <input type="number" name="Sell_Amount" min="1" max="{{i.2}}" required>
+                                    <button type="submit" style="background-color: peachpuff" class="sell" name="sell" id="sell" value="{{i.0}}">Sell </button>
+                                    {% else %}
+                                    <p>No stocks to sell</p>
+                                    {% endif %}
+                                </div>
                             </td>
                         </form>
 
