@@ -405,7 +405,8 @@ def Customer_MyPortfolio(request):
 
         else:
 
-            return HttpResponse("<h1>No Portfolio was found!!!<h1>")
+            #return HttpResponse("<h1>No Portfolio was found!!!<h1>")
+            return redirect('/customer_profile')
     else:
 
         return redirect('/home')
