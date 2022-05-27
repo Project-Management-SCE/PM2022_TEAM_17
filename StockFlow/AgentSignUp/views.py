@@ -506,17 +506,49 @@ def portfolio_confirm(request,agentID):
 def Agent_StockDeal(request):
     deals = StockDeal.objects.all()
     if request.method == "POST":
-        if 'confirm' in request.POST:
+        if 'confirm_buy' in request.POST:
             buying_stock_confirm(request)
-        if 'decline' in request.POST:
+        if 'decline_buy' in request.POST:
             buying_stock_decline(request)
+        if 'confirm_sell' in request.POST:
+            #buying_stock_confirm(request)
+            print("confirm sell\n")
+            sell_stock_confirm(request)
+        if 'decline_sell' in request.POST:
+            #buying_stock_decline(request)
+            print("decline sell\n")
+            pass
     return render(request, "AgentStocks/agent_stocks.html", {'Deals':deals})
 
+def sell_stock_confirm(request):
+    deals = StockDeal.objects.all()
+    if request.method == "POST":
+        customerID=request.POST.get("confirm_sell")
+        stockname=request.POST.get("stockname")
+        if customerID is not None:
+            stock=StockDeal.objects.get(custID=int(customerID),stock=stockname)
+            stock.amount=stock.amount-stock.isSell
+            stock.isSell=0
+            stock.save()
+            if stock.amount==0 and stock.isBuy==0:
+                stock.delete()
+            customer=User.objects.get(ID=customerID)        #email
+            email=customer.email
+            send_mail(
+                'Your Request!',
+                'Hello,Your request from StockFlow.com for Selling the stock '+stock.stock+' was confirmed,please enter the site to see the changes.Have A nice day:)',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+            return render(request, "AgentStocks/agent_stocks.html", {'Deals':deals})
+    #return render(request, "AdminHomePage/admin_agentrequestslist.html", {"agents":agents})
+    return redirect('/home')
 
 def buying_stock_confirm(request):
     deals = StockDeal.objects.all()
     if request.method == "POST":
-        customerID=request.POST.get("confirm")
+        customerID=request.POST.get("confirm_buy")
         stockname=request.POST.get("stockname")
         if customerID is not None:
             stock=StockDeal.objects.get(custID=int(customerID),stock=stockname)
@@ -539,7 +571,7 @@ def buying_stock_confirm(request):
 def buying_stock_decline(request):
     deals = StockDeal.objects.all()
     if request.method == "POST":
-        stockname=request.POST.get("stockname")
+        stockname=request.POST.get("decline_buy")
         customerID=request.POST.get("decline")
         if customerID is not None:
             stock=StockDeal.objects.get(custID=int(customerID),stock=stockname)

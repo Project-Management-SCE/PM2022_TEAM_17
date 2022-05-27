@@ -40,7 +40,7 @@
                             <form action='' method="post" enctype="multipart/form-data ">
                                 {% csrf_token %}
                                 <td>
-                                    <button type="submit" class="confirm btn btn-success shadow-4" name="confirm" id="confirm" value="{{deal.custID.ID}} ">Confirm</button>
+                                    <button type="submit" class="confirm btn btn-success shadow-4" name="confirm_buy" id="confirm_buy" value="{{deal.custID.ID}} ">Confirm</button>
                                 </td>
                                 <input type="hidden" id="stockname" name="stockname" value="{{deal.stock}}">
                             </form>
@@ -49,7 +49,7 @@
                             <form action='' method="post" enctype="multipart/form-data ">
                                 {% csrf_token %}
                                 <td>
-                                    <button type="submit" class="decline btn btn-danger btn-rounded shadow-4" name="decline" id="decline" value="{{deal.custID.ID}} ">Decline</button>
+                                    <button type="submit" class="decline btn btn-danger btn-rounded shadow-4" name="decline_buy" id="decline_buy" value="{{deal.custID.ID}} ">Decline</button>
                                 </td>
                                 <input type="hidden" id="stockname" name="stockname" value="{{deal.stock}}">
                             </form>
@@ -85,19 +85,20 @@
                         <td>{{deal.amount}}</td>
                         <td>{{deal.isSell}}</td>
 
-                        <form action='' method="post " enctype="multipart/form-data ">
+                        <form action='' method="post" enctype="multipart/form-data ">
                             {% csrf_token %}
                             <td>
-                                <button type="submit " class="confirm btn btn-success shadow-4 " name="confirm" value="{{customer.ID}}">Confirm</button>
+                                <button type="submit" class="confirm btn btn-success shadow-4" name="confirm_sell" id="confirm_sell" value="{{deal.custID.ID}} ">Confirm</button>
                             </td>
+                            <input type="hidden" id="stockname" name="stockname" value="{{deal.stock}}">
                         </form>
-                        <!--<input hidden=True name="confirm " value="{{customer.ID}} ">-->
-                        <!--<input hidden=True name="decline " value="{{customer.ID}} ">-->
-                        <form action='' method="post " enctype="multipart/form-data ">
+                        
+                        <form action='' method="post" enctype="multipart/form-data ">
                             {% csrf_token %}
                             <td>
-                                <button type="submit" class="decline btn btn-danger btn-rounded shadow-4" name="decline" value="{{customer.ID}}">Decline</button>
+                                <button type="submit" class="decline btn btn-danger btn-rounded shadow-4" name="decline_sell" id="decline_sell" value="{{deal.custID.ID}} ">Decline</button>
                             </td>
+                            <input type="hidden" id="stockname" name="stockname" value="{{deal.stock}}">
                         </form>
                     </tr>
                 </form>
