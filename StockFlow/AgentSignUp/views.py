@@ -380,6 +380,15 @@ def Customer_Profile(request):
 @login_required
 def Customer_MyPortfolio(request):
     if request.user.is_Customer and not request.user.is_Agent:
+
+        if request.method == "POST":
+            print('hello1!\n')
+            if 'remove' in request.POST:
+                print('hello2!\n')
+                StockDeal.objects.filter(custID_id=request.user.ID).delete()
+                User.objects.filter(ID=request.user.ID).update(isPortfolio='None')
+                return redirect('/customer_profile')
+            
         if request.user.isPortfolio=="confirmed":
 
             stocks = StockDeal.objects.filter(custID_id=request.user.ID)
@@ -407,7 +416,8 @@ def Customer_MyPortfolio(request):
 
         else:
 
-            return HttpResponse("<h1>No Portfolio was found!!!<h1>")
+            #return HttpResponse("<h1>No Portfolio was found!!!<h1>")
+            return redirect('/customer_profile')
     else:
 
         return redirect('/home')
