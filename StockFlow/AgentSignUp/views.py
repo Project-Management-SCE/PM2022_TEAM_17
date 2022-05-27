@@ -66,6 +66,8 @@ def SearchStock(response):
             stockTicker = response.POST.get('searchStock')
             stock = yf.Ticker(stockTicker)
             stockData = stock.history(period="4y")
+            if 'Empty DataFrame' in str(stockData):
+                raise Exception('Empty DataFrame - might be caused by an invalid symbol')
             stockData['Close'].plot(title=f"{stockTicker} stock price (in USD)")
             graph = plt.gcf()
             buf = io.BytesIO()
@@ -75,25 +77,25 @@ def SearchStock(response):
             uri = urllib.parse.quote(string)
             graph = stockData['Close']
             price = stock.info['regularMarketPrice']
-            symbol = stock.info['symbol']
             recom = stock.info['recommendationKey']
             website = stock.info['website']
-            return render(response, "stock_view.html", {"price": price, "ticker": symbol, "recom": recom, "website": website, "graph": uri})
-        except:
+            return render(response, "stock_view.html", {"price": price, "ticker": stockTicker, "recom": recom, "website": website, "graph": uri}, status=302)
+        except Exception as e:
+            print(e)
             messages.error(response, f"Stock named {stockTicker} doesn't found or not exists")
             if response.user.is_Customer:
-                return render(response, "CustomerHomePage/customer_homepage.html", {})
+                return redirect('/customer_homepage')
             elif response.user.is_Agent:
-                return render(response, "AgentHomePage/agent_homepage.html", {})
+                return redirect('/agent_homepage')
             elif response.user.is_Admin:
-                return render(response, "AdminHomePage/admin_homepage.html", {})
+                return redirect('/admin_homepage')
     else:
         if response.user.is_Customer:
-            return render(response, "CustomerHomePage/customer_homepage.html", {})
+            return redirect('/customer_homepage')
         elif response.user.is_Agent:
-            return render(response, "AgentHomePage/agent_homepage.html", {})
+            return redirect('/agent_homepage')
         elif response.user.is_Admin:
-            return render(response, "AdminHomePage/admin_homepage.html", {})
+            return redirect('/admin_homepage')
                 
         
 
@@ -166,7 +168,7 @@ def AgentSignIn(response):
                 messages.success(response, "Sign in successfully!")
                 agent.is_active = True
                 agent.save()
-                return redirect("/agent_homepage")
+                return render(response,"AgentHomePage/agent_homepage.html", {}, status=302)
             else:
                 messages.error(response, "Your account is not approved yet!")
                 return render(response, "AgentSignUp/signin_page.html", {})

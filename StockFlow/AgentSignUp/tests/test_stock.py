@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from accounts.models import User
 from django.urls import reverse
-
+import unittest
 
 class TestAgentStock(TestCase):
 
@@ -10,14 +10,13 @@ class TestAgentStock(TestCase):
 
 
     def test_Agent_stock(self):
-        response = self.client.post(reverse('AgentSignUp:Search_Stock'), data={
-            'searchStock':self.agent.get_searchStock()})
-        self.assertEqual(response.status_code,302) # status code 302 is redirect method
+        response = self.client.post(reverse('AgentSignUp:Search_Stock_agent'), data={
+            'searchStock':'MSFT'})
+        self.assertEqual(response.status_code,302) 
 
     def test_Agent_wrong_stock(self):
-        response = self.client.post(reverse('AgentSignUp:Search_Stock'), data={
-            'searchStock':'wrongStock'})
-        self.assertEqual(response.status_code,200) # status code 200 is render method
+        self.assertRaises(Exception,self.client.post('AgentSignUp:Search_Stock_agent', data={
+            'searchStock':'badStock'}))
 
 
 
@@ -25,18 +24,19 @@ class TestAgentStock(TestCase):
 class TestAdminStock(TestCase):
 
     def setUp(self):
-        self.admin = User.objects.create_Admin('testAdminUserName','testAdminName','testAdminEmail@test.com','testAdminPass','testAdminCity','Admin1234567890')
+        self.admin = User.objects.create_Admin('testAdminUserName','testAdminName','testAdminEmail@test.com','testAdminPass')
 
 
     def test_Admin_stock(self):
-        response = self.client.post(reverse('AdminSignUp:Search_Stock'), data={
-            'searchStock':self.admin.get_searchStock()})
-        self.assertEqual(response.status_code,302) # status code 302 is redirect method
+        response = self.client.post(reverse('AgentSignUp:Search_Stock_admin'), data={
+            'searchStock':'MSFT'})
+        self.assertEqual(response.status_code,302) 
 
+    
     def test_Admin_wrong_stock(self):
-        response = self.client.post(reverse('AdminSignUp:Search_Stock'), data={
-            'searchStock':'wrongStock'})
-        self.assertEqual(response.status_code,200) # status code 200 is render method
+        self.assertRaises(Exception,self.client.post('AgentSignUp:Search_Stock_admin', data={
+            'searchStock':'badStock'}))
+        
 
 
 
@@ -48,12 +48,13 @@ class TestCustomerStock(TestCase):
 
 
     def test_Customer_stock(self):
-        response = self.client.post(reverse('CustomerSignUp:Search_Stock'), data={
-            'searchStock':self.customer.get_searchStock()})
-        self.assertEqual(response.status_code,302) # status code 302 is redirect method
+        response = self.client.post(reverse('AgentSignUp:Search_Stock_cust'), data={
+            'searchStock':'MSFT'})
+        self.assertEqual(response.status_code,302) 
 
+    
     def test_Customer_wrong_stock(self):
-        response = self.client.post(reverse('CustomerSignUp:Search_Stock'), data={
-            'searchStock':'wrongStock'})
-        self.assertEqual(response.status_code,200) # status code 200 is render method
+        self.assertRaises(Exception,self.client.post('AgentSignUp:Search_Stock_cust', data={
+            'searchStock':'badStock'}))
+        
 

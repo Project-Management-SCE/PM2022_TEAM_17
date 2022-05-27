@@ -1,16 +1,16 @@
-After downloading the files:
+<a href="https://stockflow-17.herokuapp.com"><img src="StockFlow\AgentSignUp\assets\StockFlow Banner.png" alt=""></a><br/>
+StockFlow - Buying & Selling Stocks Simulator!<br/>
+You can do the following:<br/>
 
-For running the project do the following:
+* Sign up as either a Customer or Agent <br/>
+* Sign in as either a Customer or Agent <br/>
+<br/>
 
-1. install django by writing in the cmd:
-  * pip install django
-
-2. get to the project directory by writing in the cmd:
-  * cd <project directory>
-
-3. in the cmd run command python manage.py runserver
- 
-
-4. enter to the local host ip with port 8000:
-    127.0.0.1:8000
-
+* As an Agent: <br/>
+  * Approve customers protfolios <br/>
+  * Approve customers Purchase and/or Sell requests <br/>
+  * Search Stocks details <br/>
+  * See your active customers <br/>
+* As an Customer: <br/>
+  * Apply Purchase and/or Sell requests <br/>
+  * Search Stocks details <br/>
