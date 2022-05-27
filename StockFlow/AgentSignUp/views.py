@@ -382,12 +382,20 @@ def Customer_MyPortfolio(request):
     if request.user.is_Customer and not request.user.is_Agent:
 
         if request.method == "POST":
-            print('hello1!\n')
             if 'remove' in request.POST:
-                print('hello2!\n')
                 StockDeal.objects.filter(custID_id=request.user.ID).delete()
                 User.objects.filter(ID=request.user.ID).update(isPortfolio='None')
                 return redirect('/customer_profile')
+            if 'sell' in request.POST:
+                stockID=request.POST.get('sell')
+                sell_Amount = request.POST.get('Sell_Amount')
+                sd=StockDeal.objects.get(custID_id=request.user.ID,id=stockID)
+                if (sd.isSell+int(sell_Amount))<=sd.amount: 
+                    sd.isSell=sd.isSell+int(sell_Amount)
+                    sd.save()
+                else:
+                    sd.isSell=sd.amount
+                    sd.save()
             
         if request.user.isPortfolio=="confirmed":
 
