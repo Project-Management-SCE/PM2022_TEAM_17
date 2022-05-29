@@ -1,11 +1,19 @@
 {% extends "base.html" %} {% block title %} Admin Home Page {% endblock %} {% block content %}
+<style>
+    [class*="adminButtons"]>* {
+        margin: 0.3rem;
+    }
+</style>
 <section class="vh-100">
-    <h1>Hello {{username}}!</h1>
+    <div class="d-flex align-items-center justify-content-center" style="margin-top:3rem;">
+        <h1>Hello {{username}}!</h1>
+    </div>
     {% include "search_stock.html" %}
-    <p>If you want to see the requests of Agents for singing up please <a href="/admin_agentrequestslist">click here!</a></p>
-    <p>Queries:</p>
-    <p>For Stock Query <a href="/admin_stockquery">click here!</a></p>
-    <p>For Agents Query <a href="/admin_agentquery">click here!</a></p>
+    <div class="d-flex align-items-center justify-content-center adminButtons" style="margin-top:3rem;">
+        <a href="/admin_agentrequestslist"><button type="button" class="btn btn-info" data-mdb-ripple-color="dark">Agents Signup Requests</button></a>
+        <a href="/admin_stockquery"><button type="button" class="btn btn-info" data-mdb-ripple-color="dark">Stocks Query</button></a>
+        <a href="/admin_agentquery"><button type="button" class="btn btn-info" data-mdb-ripple-color="dark">Agents Query</button></a>
+    </div>
 </section>
 
 {% endblock %}

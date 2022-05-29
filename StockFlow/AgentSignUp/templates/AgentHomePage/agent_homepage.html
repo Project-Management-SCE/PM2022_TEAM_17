@@ -1,8 +1,9 @@
 {% extends "base.html" %} {% block title %} Agent Home Page {% endblock %} {% block content %}
 <section class="vh-100">
-    <h1>Hello {{request.user}}!</h1>
+    <div class="d-flex align-items-center justify-content-center" style="margin-top:3rem;">
+        <h1>Hello {{request.user}}!</h1>
+    </div>
     {% include "search_stock.html" %}
-
 </section>
 
 {% endblock %}
