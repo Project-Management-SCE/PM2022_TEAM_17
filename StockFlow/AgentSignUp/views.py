@@ -630,12 +630,11 @@ def StockQuery(request):
             else:
                 stocks.append((stock.stock,stock.amount))
                 tickers.append(stock.stock)
-    print(tickers)
-    print(stocks)
     return render(request, "AdminHomePage/admin_stockquery.html", {'stocks':stocks})
 
 @login_required
 def AgentQuery(request):
+    sort = request.POST.get("sortBy")
     agents = User.objects.all().filter(is_Agent=True,isConfirmedAgent=True)
     AgentCust = {}
     for agent in agents:
@@ -645,7 +644,11 @@ def AgentQuery(request):
         for agent in agents:
             if agent.ID == p.agentID:
                 AgentCust[agent] += 1
-    AgentCust = {cust : agent for cust, agent in sorted(AgentCust.items(), key= lambda p: p[1], reverse=True)}
-    print(AgentCust)
+    if sort == 'ID':
+        AgentCust = {cust : agent for cust, agent in sorted(AgentCust.items(), key= lambda p: p[0].ID, reverse=True)}
+    elif sort == 'Name':
+        AgentCust = {cust : agent for cust, agent in sorted(AgentCust.items(), key= lambda p: p[0].full_name)}
+    elif sort == 'Cust':
+        AgentCust = {cust : agent for cust, agent in sorted(AgentCust.items(), key= lambda p: p[1], reverse=True)}
     return render(request, "AdminHomePage/admin_agentquery.html", {'agents':AgentCust})
     
