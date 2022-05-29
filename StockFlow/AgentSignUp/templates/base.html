@@ -56,48 +56,68 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
                 <li class="nav-item active">
+                    <!-- Navbar if user not logged in-->
                     {% if not request.user.is_authenticated %}
-                    <a class="nav-link" href="/home">Home<span class="sr-only">(current)</span></a> {% else %}
-                    <a class="nav-link" href="/customer_homepage">Home<span class="sr-only">(current)</span></a> {% endif %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="/home">Home<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Sign in
+                            </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="/agent_signin">Agent</a>
+                            <a class="dropdown-item" href="/cust_signin">Customer</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Sign up
+                            </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="/agent_signup">Agent</a>
+                            <a class="dropdown-item" href="/cust_signup">Customer</a>
+                        </div>
+                    </li>
+                    <!------------------------------------>
+
+                    <!-- Navbar if Customer logged in-->
+                    {% elif request.user.is_authenticated and request.user.is_Customer %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="/customer_homepage">Home<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="/customer_profile" id="navbarDropdownMenuLink">Profile</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="/customer_myportfolio" id="navbarDropdownMenuLink">My Portfolio</a>
+                    </li>
+                    <!------------------------------------>
+
+
+                    <!-- Navbar if Agent logged in-->
+                    {% elif request.user.is_authenticated and request.user.is_Agent %}
+                    <a class="nav-link" href="/agent_homepage">Home<span class="sr-only">(current)</span></a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="/agent_stock_deal" id="navbarDropdownMenuLink">Stock Deal Requests </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="/agent_active_customers" id="navbarDropdownMenuLink">My Customers </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="/agent_portfolio_requests" id="navbarDropdownMenuLink"> Customers Portfolio Requests</a>
+                    </li>
+
+
+
+                    <!-- Navbar if Admin logged in-->
+                    {% elif request.user.is_authenticated and request.user.is_Admin %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="/admin_homepage">Home<span class="sr-only">(current)</span></a>
+                    </li>
+
+                    {% endif %}
                 </li>
-                {% if not request.user.is_authenticated %}
-                <!--!!!Need to be changed to 'not' before finishing!!!-->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Sign in
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="/agent_signin">Agent</a>
-                        <a class="dropdown-item" href="/cust_signin">Customer</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Sign up
-              </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="/agent_signup">Agent</a>
-                        <a class="dropdown-item" href="/cust_signup">Customer</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    {% elif request.user.is_authenticated and request.user.is_Customer and not request.user.is_Agent %}
-                    <a class="nav-link" href="/customer_profile" id="navbarDropdownMenuLink">Profile</a>
-                    <a class="nav-link" href="/customer_myportfolio" id="navbarDropdownMenuLink">My Portfolio</a> {% elif request.user.is_authenticated and request.user.is_Agent and not request.user.is_Admin and not request.user.is_Customer%}
-                    <a class="nav-link" href="/agent_portfolio_requests" id="navbarDropdownMenuLink"> Customers Portfolio Requests</a>
-                </li>
-                {% endif %}
-                <li class="nav-item dropdown">
-                    {% if request.user.is_authenticated and not request.user.is_Customer and request.user.is_Agent %}
-                    <a class="nav-link" href="/agent_stock_deal" id="navbarDropdownMenuLink">Stock Deal Requests </a> 
-                    <a class="nav-link" href="/agent_active_customers" id="navbarDropdownMenuLink">My Customers </a>{% endif %}
-                </li>
-                <!--<li class="nav-item dropdown">
-                    {% if request.user.is_authenticated and request.user.is_Customer and not is_Agent %}
-                    <a class="nav-link" href="/customer_buy" id="navbarDropdownMenuLink">Stocks</a>
-                </li>
-                {% endif %}
-                --->
             </ul>
 
         </div>

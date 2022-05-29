@@ -63,6 +63,7 @@ def buyStock(request):
 def SearchStock(response):
     if response.method == "POST":
         try:
+            plt.clf()
             stockTicker = response.POST.get('searchStock')
             stock = yf.Ticker(stockTicker)
             stockData = stock.history(period="4y")
@@ -161,6 +162,7 @@ def AgentSignIn(response):
             agent = User.objects.get(email = emailCheck,password = passwordCheck)
         except User.DoesNotExist: # if agent with such email or password doesn't exists or some of the data is wrong
             messages.error(response, "one or more of the credentials are incorrect!")
+            
             return render(response, "AgentSignUp/signin_page.html", {})
         if agent is not None:
             if agent.isConfirmedAgent:
@@ -168,7 +170,7 @@ def AgentSignIn(response):
                 messages.success(response, "Sign in successfully!")
                 agent.is_active = True
                 agent.save()
-                return render(response,"AgentHomePage/agent_homepage.html", {}, status=302)
+                return redirect('/agent_homepage')
             else:
                 messages.error(response, "Your account is not approved yet!")
                 return render(response, "AgentSignUp/signin_page.html", {})
@@ -386,7 +388,7 @@ def Customer_MyPortfolio(request):
                 StockDeal.objects.filter(custID_id=request.user.ID).delete()
                 User.objects.filter(ID=request.user.ID).update(isPortfolio='None')
                 return redirect('/customer_profile')
-            if 'sell' in request.POST:
+            elif 'sell' in request.POST:
                 stockID=request.POST.get('sell')
                 sell_Amount = request.POST.get('Sell_Amount')
                 sd=StockDeal.objects.get(custID_id=request.user.ID,id=stockID)
@@ -396,6 +398,12 @@ def Customer_MyPortfolio(request):
                 else:
                     sd.isSell=sd.amount
                     sd.save()
+            elif 'buy' in request.POST:
+                stockID=request.POST.get('buy')
+                buy_Amount = request.POST.get('Buy_Amount')
+                sd=StockDeal.objects.get(custID_id=request.user.ID,id=stockID)
+                sd.isBuy=sd.isBuy+int(buy_Amount)
+                sd.save()
             
         if request.user.isPortfolio=="confirmed":
 
@@ -418,7 +426,7 @@ def Customer_MyPortfolio(request):
             for i in range(len(tickers)):
                 d.append((ids[i], tickers[i], amount[i], value[i]))
 
-            pval = sum(value)
+            pval = round(sum(value),2)
 
             return render(request, "Customer_Profile/customer_myportfolio.html", {"d": d, "pval": pval})
 
@@ -628,6 +636,25 @@ def StockQuery(request):
             else:
                 stocks.append((stock.stock,stock.amount))
                 tickers.append(stock.stock)
-    print(tickers)
-    print(stocks)
     return render(request, "AdminHomePage/admin_stockquery.html", {'stocks':stocks})
+
+@login_required
+def AgentQuery(request):
+    sort = request.POST.get("sortBy")
+    agents = User.objects.all().filter(is_Agent=True,isConfirmedAgent=True)
+    AgentCust = {}
+    for agent in agents:
+        AgentCust[agent] = 0
+    portfolios = Portfolios.objects.all()
+    for p in portfolios:
+        for agent in agents:
+            if agent.ID == p.agentID:
+                AgentCust[agent] += 1
+    if sort == 'ID':
+        AgentCust = {cust : agent for cust, agent in sorted(AgentCust.items(), key= lambda p: p[0].ID, reverse=True)}
+    elif sort == 'Name':
+        AgentCust = {cust : agent for cust, agent in sorted(AgentCust.items(), key= lambda p: p[0].full_name)}
+    elif sort == 'Cust':
+        AgentCust = {cust : agent for cust, agent in sorted(AgentCust.items(), key= lambda p: p[1], reverse=True)}
+    return render(request, "AdminHomePage/admin_agentquery.html", {'agents':AgentCust})
+    

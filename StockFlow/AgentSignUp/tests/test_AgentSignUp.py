@@ -48,7 +48,7 @@ class TestAgentUser(TestCase):
         response = self.client.post(reverse('AgentSignUp:agent_signin'), data={
             'email':self.agent.get_email(),
             'password':self.agent.get_password()})
-        self.assertEqual(response.status_code,302)
+        self.assertEqual(response.status_code,200)
 
     def test_wrong_Agent_signin_form(self):
         response = self.client.post(reverse('AgentSignUp:agent_signin'), data={
