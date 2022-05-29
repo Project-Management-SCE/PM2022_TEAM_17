@@ -92,7 +92,7 @@ class User(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
-    ID= models.AutoField(primary_key=True)
+    ID = models.AutoField(primary_key=True)
     is_active = models.BooleanField(default=False)
     is_Customer = models.BooleanField(default=False)
     is_Agent = models.BooleanField(default=False) 

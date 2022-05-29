@@ -1,0 +1,33 @@
+{% extends "base.html" %} {% block title %}Stocks Query{% endblock %} {% block content %}
+<style type="text/css">
+    .tableDiv {
+        margin: auto;
+        width: 80%;
+        padding: 10px;
+    }
+</style>
+<section class="vh-100">
+    <div class=tableDiv>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Agent ID</th>
+                    <th scope="col">Agent Name</th>
+                    <th scope="col">Number of cutomers</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for agent, count in agents.items%}
+                <form method="post" action="#">
+                    {% csrf_token %}
+                    <tr>
+                        <td>{{agent.ID}}</td>
+                        <td>{{agent.full_name}}</td>
+                        <td>{{count}}</td>
+                    </tr>
+                </form>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+    {% endblock%}
