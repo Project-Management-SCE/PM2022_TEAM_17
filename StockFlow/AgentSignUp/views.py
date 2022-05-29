@@ -63,6 +63,7 @@ def buyStock(request):
 def SearchStock(response):
     if response.method == "POST":
         try:
+            plt.clf()
             stockTicker = response.POST.get('searchStock')
             stock = yf.Ticker(stockTicker)
             stockData = stock.history(period="4y")
@@ -161,6 +162,7 @@ def AgentSignIn(response):
             agent = User.objects.get(email = emailCheck,password = passwordCheck)
         except User.DoesNotExist: # if agent with such email or password doesn't exists or some of the data is wrong
             messages.error(response, "one or more of the credentials are incorrect!")
+            
             return render(response, "AgentSignUp/signin_page.html", {})
         if agent is not None:
             if agent.isConfirmedAgent:
@@ -168,7 +170,7 @@ def AgentSignIn(response):
                 messages.success(response, "Sign in successfully!")
                 agent.is_active = True
                 agent.save()
-                return render(response,"AgentHomePage/agent_homepage.html", {}, status=302)
+                return redirect('/agent_homepage')
             else:
                 messages.error(response, "Your account is not approved yet!")
                 return render(response, "AgentSignUp/signin_page.html", {})
