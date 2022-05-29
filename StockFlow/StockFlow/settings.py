@@ -29,11 +29,13 @@ DEBUG = True
 ALLOWED_HOSTS = ['stockflow-17.herokuapp.com','127.0.0.1']
 
 #gmail email send/settings.py
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND='django_smtp_ssl.SSLEmailBackend'
 #EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_USE_TLS = True
-EMAIL_PORT = 587
+#EMAIL_PORT = 587
+EMAIL_PORT=465
 EMAIL_HOST_USER = 'stockflowteam17@gmail.com' 
 EMAIL_HOST_PASSWORD = '123team17' 
 EMAIL_USE_TLS = True
