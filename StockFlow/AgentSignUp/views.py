@@ -388,7 +388,7 @@ def Customer_MyPortfolio(request):
                 StockDeal.objects.filter(custID_id=request.user.ID).delete()
                 User.objects.filter(ID=request.user.ID).update(isPortfolio='None')
                 return redirect('/customer_profile')
-            if 'sell' in request.POST:
+            elif 'sell' in request.POST:
                 stockID=request.POST.get('sell')
                 sell_Amount = request.POST.get('Sell_Amount')
                 sd=StockDeal.objects.get(custID_id=request.user.ID,id=stockID)
@@ -398,6 +398,12 @@ def Customer_MyPortfolio(request):
                 else:
                     sd.isSell=sd.amount
                     sd.save()
+            elif 'buy' in request.POST:
+                stockID=request.POST.get('buy')
+                buy_Amount = request.POST.get('Buy_Amount')
+                sd=StockDeal.objects.get(custID_id=request.user.ID,id=stockID)
+                sd.isBuy=sd.isBuy+int(buy_Amount)
+                sd.save()
             
         if request.user.isPortfolio=="confirmed":
 
@@ -420,7 +426,7 @@ def Customer_MyPortfolio(request):
             for i in range(len(tickers)):
                 d.append((ids[i], tickers[i], amount[i], value[i]))
 
-            pval = sum(value)
+            pval = round(sum(value),2)
 
             return render(request, "Customer_Profile/customer_myportfolio.html", {"d": d, "pval": pval})
 
