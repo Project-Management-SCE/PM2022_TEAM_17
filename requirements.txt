@@ -9,3 +9,4 @@ pybase64
 requires.io
 psycopg2==2.8.6
 pandas_datareader
+django_smtp_ssl
