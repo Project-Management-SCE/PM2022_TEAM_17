@@ -1,7 +1,8 @@
+from email import message
 from django.test import TestCase, Client
 from accounts.models import User
 from django.urls import reverse
-
+from django.contrib.messages import get_messages
 
 class TestAgentUser(TestCase):
 
@@ -47,15 +48,35 @@ class TestAgentUser(TestCase):
     def test_Agent_signin_form(self):
         response = self.client.post(reverse('AgentSignUp:agent_signin'), data={
             'email':self.agent.get_email(),
-            'password':self.agent.get_password()})
-        self.assertEqual(response.status_code,302)
+            'password':self.agent.get_password()}, follow=True)
+        self.assertEqual(response.status_code,200)
+        user = response.context['user'] 
+        self.assertEqual(user.username,self.agent.username)
+        self.assertTemplateUsed(response, 'AgentHomePage/agent_homepage.html')
 
     def test_wrong_Agent_signin_form(self):
         response = self.client.post(reverse('AgentSignUp:agent_signin'), data={
             'email':'wrongEmail@test.com',
             'password':'wrongPass'})
-        self.assertEqual(response.status_code,200) 
     
+    def test_notConfirmed_agent_homepage(self):
+        self.agent.isConfirmedAgent = False
+        self.agent.save()
+        response = self.client.post(reverse('AgentSignUp:agent_signin'), data={
+            'email':self.agent.get_email(),
+            'password':self.agent.get_password()}, follow=True)
+        
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]),"Your account is not approved yet!")
+
+    def test_not_isagent_homepage(self):
+        self.agent.is_Agent = False
+        self.agent.save()
+        response = self.client.post(reverse('AgentSignUp:agent_signin'), data={
+            'emailLogin':self.agent.get_email(),
+            'passLogin':self.agent.get_password()})
+        self.assertEqual(response.status_code,200)   
 
 class TestCustomerUser(TestCase):
     def setUp(self):
@@ -106,8 +127,11 @@ class TestCustomerUser(TestCase):
     def test_Customer_signin_form(self):
         response = self.client.post(reverse('AgentSignUp:cust_signin'), data={
             'emailLogin':self.customer.get_email(),
-            'passLogin':self.customer.get_password()})
-        self.assertEqual(response.status_code,302)
+            'passLogin':self.customer.get_password()}, follow=True)
+        user = response.context['user']
+        self.assertEqual(response.status_code,200)
+        self.assertEqual(user.username,self.customer.username)
+        self.assertTemplateUsed(response, 'CustomerHomePage/customer_homepage.html')
     
     def test_wrong_Customer_signin_form(self):
         response = self.client.post(reverse('AgentSignUp:cust_signin'), data={
@@ -115,6 +139,13 @@ class TestCustomerUser(TestCase):
             'passLogin':'wrongPass'})
         self.assertEqual(response.status_code,200) 
 
+    def test_not_iscustomer_homepage(self):
+        self.customer.is_Customer = False
+        self.customer.save()
+        response = self.client.post(reverse('AgentSignUp:cust_signin'), data={
+            'emailLogin':self.customer.get_email(),
+            'passLogin':self.customer.get_password()})
+        self.assertEqual(response.status_code,200)
 
 
 class TestAdminUser(TestCase):
@@ -141,11 +172,23 @@ class TestAdminUser(TestCase):
     def test_admin_signin_form(self):
         response = self.client.post(reverse('AgentSignUp:admin_signin'), data={
             'emailLogin':self.admin.get_email(),
-            'passLogin':self.admin.get_password()})
-        self.assertEqual(response.status_code,302) 
+            'passLogin':self.admin.get_password()}, follow=True)
+        user = response.context['user']
+        self.assertEqual(response.status_code,200) 
+        self.assertEqual(user.username,self.admin.username)
+        self.assertTemplateUsed(response, 'AdminHomePage/admin_homepage.html')
 
     def test_wrong_Admin_signin_form(self):
         response = self.client.post(reverse('AgentSignUp:admin_signin'), data={
             'emailLogin':'wrongEmail@test.com',
             'passLogin':'wrongPass'})
         self.assertEqual(response.status_code,200) 
+        
+
+    def test_not_isadmin_homepage(self):
+        self.admin.is_Admin = False
+        self.admin.save()
+        response = self.client.post(reverse('AgentSignUp:admin_signin'), data={
+            'emailLogin':self.admin.get_email(),
+            'passLogin':self.admin.get_password()})
+        self.assertEqual(response.status_code,200)
