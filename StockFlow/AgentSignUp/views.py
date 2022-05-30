@@ -31,14 +31,6 @@ from pandas_datareader import data
 import pandas as pd
 
 
-@login_required
-#def Customer_Purchase(request):
-#    tickers = ['AAPL', 'MSFT', 'AMD', 'SPY', 'LYFT', 'SOS', 'ATVI', 'RDBX', '^TNX', 'BRK-B', 'FRGE'][0:3]
-#    stocks = {}
-#    for s in tickers:
-#        tickerInfo = yf.Ticker(s).info
-#        stocks[s] = {'name': tickerInfo['shortName'], 'price':tickerInfo['regularMarketPrice']}
-#    return render(request,"CustomerStockBuy/customer_buy.html",{'stocks': stocks})
 
 @login_required
 def buyStock(request):
@@ -76,7 +68,6 @@ def SearchStock(response):
             buf.seek(0)
             string = base64.b64encode(buf.read())
             uri = urllib.parse.quote(string)
-            graph = stockData['Close']
             price = stock.info['regularMarketPrice']
             recom = stock.info['recommendationKey']
             website = stock.info['website']
@@ -174,55 +165,13 @@ def AgentSignIn(response):
             else:
                 messages.error(response, "Your account is not approved yet!")
                 return render(response, "AgentSignUp/signin_page.html", {})
-
-            #return render(response, "AgentHomePage/agent_homepage.html", {})  
-            #return AgentHomePage(response)
-            #return render(response, "AgentHomePage/agent_homepage.html", {})
-            
-            #return HttpResponse("<h1>No ticker exist<h1>")
-
-
     else:
         return render(response, "AgentSignUp/signin_page.html", {})
-
-# def AdminSignIn(response):
-#     if response.method == "POST":
-#         emailCheck = response.POST.get('emailLogin')
-#         passwordCheck = response.POST.get('passLogin')
-#         try:
-#             admin = User.objects.get(email = emailCheck,password = passwordCheck,is_Admin=True)
-#         except User.DoesNotExist: # if agent with such email or password doesn't exists or some of the data is wrong
-#             messages.error(response, "one or more of the credentials are incorrect!")
-#             return render(response, "AdminSignIn/admin_signin.html", {})
-#         if admin is not None:
-#             login(response, admin)
-#             messages.success(response, "Sign in successfully!")
-#             return redirect("/admin_homepage") 
-#     else:
-#         return render(response, "AdminSignIn/admin_signin.html", {})
-
-    # if(request.user.is_authenticated):
-    #     return redirect('/')
-    # if request.method == 'POST':
-    #     email = request.POST['email']
-    #     password = request.POST['password']
-
-    #     user = authenticate(email=email, password=password)
-    #     if user is not None:
-    #         login(request, user)
-    #         return redirect('/home')
-    #     else:
-    #         messages.info(request, ("Invalid credentials "+email+"   "+password))
-    #         return redirect('/login')
-
-    # else:
-    #     return render(request, 'AgentSignUp/signin_page.html')
         
 def AgentSignUp(response):
     if(response.user.is_authenticated):
         return redirect('/')
     if response.method == "POST":
-        #agent = User()
         username = response.POST.get('username')
         full_name = response.POST.get('full_name')
         email = response.POST.get('email')
@@ -230,7 +179,6 @@ def AgentSignUp(response):
         pass2 = response.POST.get('password2')
         city = response.POST.get('city')
         Mobile = response.POST.get('Mobile')
-        #isConfirmedAgent = False
         try:
             agentEmailTest = User.objects.get(email = email,is_Agent=True)
         except User.DoesNotExist:
@@ -245,9 +193,7 @@ def AgentSignUp(response):
         elif password != pass2:
             return render(response, "AgentSignUp/signup_page.html", {})
             
-    else:
-        form = CreateNewAgent()
-    return render(response, "AgentSignUp/signup_page.html", {"form":form})
+    return render(response, "AgentSignUp/signup_page.html", {})
 
 def home(response):
     return render(response, "home.html", {})
@@ -272,43 +218,28 @@ def AdminSignIn(response):
 
 @login_required
 def AdminHomePage(request):
-    # Id = request.user.
-    # admin = User.objects.get(email=Id)
-    # if admin.is_Admin ==True:
     username=request.user.username
     is_Admin=request.user.is_Admin
-    #User.objects.get()
     if is_Admin:
         return render(request, "AdminHomePage/admin_homepage.html", {"username":username})
     return redirect("/home") 
-    # return redirect("/home")
 
 @login_required
 def AgentHomePage(request):
-    # Id = request.user.
-    # admin = User.objects.get(email=Id)
-    # if admin.is_Admin ==True:
     username=request.user.username
     is_Agent=request.user.is_Agent
     isConfirmedAgent=request.user.isConfirmedAgent
-    #User.objects.get()
     if is_Agent:
         return render(request, "AgentHomePage/agent_homepage.html", {"username":username,"isConfirmedAgent":isConfirmedAgent})
     return redirect("/home") 
-    # return redirect("/home")
 
 @login_required
 def CustomerHomePage(request):
-    # Id = request.user.
-    # admin = User.objects.get(email=Id)
-    # if admin.is_Admin ==True:
     username=request.user.username
     is_Customer=request.user.is_Customer
-    #User.objects.get()
     if is_Customer:
         return render(request, "CustomerHomePage/customer_homepage.html", {"username":username})
     return redirect("/home") 
-    # return redirect("/home")
 
 
 @login_required
@@ -320,7 +251,6 @@ def Logout(request):
 def AgentRequestsList(request):
     agents = User.objects.filter(isConfirmedAgent=False).filter(is_Agent=True)
     if request.method == "POST":
-        #agentID=request.POST.get("confirm")
         if 'confirm' in request.POST:
             agent_confirm(request)
         if 'decline' in request.POST:
@@ -328,9 +258,7 @@ def AgentRequestsList(request):
     return render(request, "AdminHomePage/admin_agentrequestslist.html", {"agents":agents})
 
 def agent_confirm(request):
-    agents = User.objects.filter(isConfirmedAgent=False).filter(is_Agent=True)
     if request.method == "POST":
-        #agentID=request.POST.get("confirm")
         agent1ID=request.POST.get("confirm")
         if agent1ID is not None:
             User.objects.filter(ID=agent1ID).update(isConfirmedAgent=True)
@@ -343,9 +271,7 @@ def agent_confirm(request):
                 [email],
                 fail_silently=False,
             )
-            agents = User.objects.filter(isConfirmedAgent=False).filter(is_Agent=True)
             return redirect('/admin_homepage')
-    #return render(request, "AdminHomePage/admin_agentrequestslist.html", {"agents":agents})
     return redirect('/home')
 
 
@@ -378,7 +304,7 @@ def Customer_Profile(request):
     else:
         return redirect('/home')
 
-#
+
 @login_required
 def Customer_MyPortfolio(request):
     if request.user.is_Customer and not request.user.is_Agent:
@@ -431,8 +357,6 @@ def Customer_MyPortfolio(request):
             return render(request, "Customer_Profile/customer_myportfolio.html", {"d": d, "pval": pval})
 
         else:
-
-            #return HttpResponse("<h1>No Portfolio was found!!!<h1>")
             return redirect('/customer_profile')
     else:
 
@@ -454,7 +378,6 @@ def Agent_PortfolioRequests(request):
         return redirect('/home')
 
 
-#
 @login_required
 def AgentActiveCustomers(request):
     if request.user.is_Agent and not request.user.is_Customer:
@@ -464,7 +387,6 @@ def AgentActiveCustomers(request):
         s=[]
         for c in cus:
             d=User.objects.get(ID=c.customerID)
-            #s.append((d.full_name,d.email))
             s.append(d)
 
         return render(request, "AgentHomePage/agent_active_customers.html", {"s":s})
@@ -521,7 +443,6 @@ def Agent_StockDeal(request):
         if 'confirm_sell' in request.POST:
             sell_stock_confirm(request)
         if 'decline_sell' in request.POST:
-            print("decline sell\n")
             sell_stock_decline(request)
     return render(request, "AgentStocks/agent_stocks.html", {'Deals':deals})
 
@@ -569,7 +490,6 @@ def sell_stock_confirm(request):
                 fail_silently=False,
             )
             return render(request, "AgentStocks/agent_stocks.html", {'Deals':deals})
-    #return render(request, "AdminHomePage/admin_agentrequestslist.html", {"agents":agents})
     return redirect('/home')
 
 def buying_stock_confirm(request):
@@ -592,7 +512,6 @@ def buying_stock_confirm(request):
                 fail_silently=False,
             )
             return render(request, "AgentStocks/agent_stocks.html", {'Deals':deals})
-    #return render(request, "AdminHomePage/admin_agentrequestslist.html", {"agents":agents})
     return redirect('/home')
 
 def buying_stock_decline(request):
@@ -621,7 +540,6 @@ def StockQuery(request):
     deals = StockDeal.objects.all()
     tickers=[]
     stocks=[]
-    #if request.method == "POST":
     for stock in deals:
         if stocks is None:
             stocks.append((stock.stock,stock.amount))
