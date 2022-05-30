@@ -1,7 +1,9 @@
+from urllib import response
 from django.test import TestCase, Client
 from accounts.models import User
+from stocks.models import StockDeal
 from django.urls import reverse
-import unittest
+
 
 class TestAgentStock(TestCase):
 
@@ -36,6 +38,23 @@ class TestAdminStock(TestCase):
     def test_Admin_wrong_stock(self):
         self.assertRaises(Exception,self.client.post('AgentSignUp:Search_Stock_admin', data={
             'searchStock':'badStock'}))
+
+    def test_empty_stock_query(self):
+        response = self.client.get('/admin_stockquery/',follow=True)
+        self.assertEqual(response.status_code,200)
+        self.assertFalse(response.context['stocks'])
+
+    def test_stock_query(self):
+        cust = User.objects.create_Customer('testCustomerUserName','testCustomerName','testCustomerEmail@test.com','testCustomerPass','testCustomerCity','Customer1234567890')
+        cust.save()
+        deal = StockDeal(custID=cust, stock='MSFT')
+        deal.save()
+        response = self.client.get('/admin_stockquery/',follow=True)
+        self.assertEqual(response.status_code,200)
+        self.assertTrue(response.context['stocks'])
+        self.assertEqual(response.context['stocks'][0],('MSFT',0))
+
+    
         
 
 
