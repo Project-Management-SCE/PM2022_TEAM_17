@@ -28,6 +28,7 @@ pipeline {
                      
                      dir('StockFlow'){ 
                         sh 'python -m coverage run --source="." manage.py test AgentSignUp.tests.test_AgentSignUp'
+                         sh 'python -m coverage report'
                         sh 'python -m coverage run --source="." manage.py test AgentSignUp.tests.test_stock'
                         sh 'python -m coverage report'
                     }
