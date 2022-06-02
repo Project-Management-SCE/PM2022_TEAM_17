@@ -269,7 +269,7 @@ def agent_confirm(request):
                 'Hello,Your request from StockFlow.com for Agent Account was confirmed,please enter the site to see the changes.Have A nice day:)',
                 settings.DEFAULT_FROM_EMAIL,
                 [email],
-                fail_silently=False,
+                fail_silently=True,
             )
             return redirect('/admin_homepage')
     return redirect('/home')
@@ -287,7 +287,7 @@ def Agent_Decline(request):
                 'Hello,Your request from StockFlow.com for Agent Account was declined.Have A nice day:)',
                 settings.DEFAULT_FROM_EMAIL,
                 [email],
-                fail_silently=False,
+                fail_silently=True,
             )
             User.objects.filter(ID=agentID).delete()
     return render(request, "AdminHomePage/admin_agentrequestslist.html", {"agents":agents})
@@ -407,7 +407,7 @@ def portfolio_decline(request):
                 'Hello,Your request from StockFlow.com for Portfolio was declined,You can try again.Have A nice day:)',
                 settings.DEFAULT_FROM_EMAIL,
                 [email],
-                fail_silently=False,
+                fail_silently=True,
             )
     return render(request, "AgentHomePage/agent_portfoliorequests.html", {"customers":customers})
 
@@ -425,7 +425,7 @@ def portfolio_confirm(request,agentID):
                 'Hello,Your request from StockFlow.com for Portfolio was confirmed,please enter the site to see the changes.Have A nice day:)',
                 settings.DEFAULT_FROM_EMAIL,
                 [email],
-                fail_silently=False,
+                fail_silently=True,
             )
             p=Portfolios(agentID=agentID,customerID=customerID)
             p.save()
@@ -462,7 +462,7 @@ def sell_stock_decline(request):
                 'Hello,Your request from StockFlow.com for selling the stock '+stock.stock+' was declined.Have A nice day:)',
                 settings.DEFAULT_FROM_EMAIL,
                 [email],
-                fail_silently=False,
+                fail_silently=True,
             )
             if(stock.amount==0 and stock.isBuy==0 ):
                 stock.delete()
@@ -487,7 +487,7 @@ def sell_stock_confirm(request):
                 'Hello,Your request from StockFlow.com for Selling the stock '+stock.stock+' was confirmed,please enter the site to see the changes.Have A nice day:)',
                 settings.DEFAULT_FROM_EMAIL,
                 [email],
-                fail_silently=False,
+                fail_silently=True,
             )
             return render(request, "AgentStocks/agent_stocks.html", {'Deals':deals})
     return redirect('/home')
@@ -509,7 +509,7 @@ def buying_stock_confirm(request):
                 'Hello,Your request from StockFlow.com for Buying the stock '+stock.stock+' was confirmed,please enter the site to see the changes.Have A nice day:)',
                 settings.DEFAULT_FROM_EMAIL,
                 [email],
-                fail_silently=False,
+                fail_silently=True,
             )
             return render(request, "AgentStocks/agent_stocks.html", {'Deals':deals})
     return redirect('/home')
@@ -530,7 +530,7 @@ def buying_stock_decline(request):
                 'Hello,Your request from StockFlow.com for Buying the stock '+stock.stock+' was declined.Have A nice day:)',
                 settings.DEFAULT_FROM_EMAIL,
                 [email],
-                fail_silently=False,
+                fail_silently=True,
             )
             if(stock.amount==0 and stock.isSell==0 ):
                 stock.delete()
